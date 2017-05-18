@@ -1,0 +1,31 @@
+<div class="form-contact" ng-controller='contactInfoController'>
+    <center>
+        <a href='' ng-click='logout()'>Logout</a>
+        <a ng-href='#!/studentHome'>Go Home</a> >>
+        <a ng-href='#!/contactInfo' class="active">Contact Info</a> >
+        <a ng-href='#!/education'>Education</a> >
+        <a ng-href='#!/employment'>Employment</a> >
+        <a ng-href='#!/availability'>Availability</a> >
+        <a ng-href='#!/languages'>Languages</a> >
+        <a ng-href='#!/courses'>Courses</a>
+    </center><br><br>
+    <form>
+        <fieldset>
+            <legend><span class="number" ng-model="name">1</span>{{name}} Contact Information </legend>
+            <input ng-model='phoneNumber' type="text" placeholder="Phone Number*"><br>
+            <input ng-model='mobileNumber' type="text" placeholder="Mobile Number*">
+        </fieldset>
+        <fieldset>
+            <legend><span class="number">2</span> Address</legend>
+            <input ng-model='country' type="text" name="country" placeholder="Country*">
+            <input ng-model='addressOne' type="text" name="address1" placeholder="Address1*"><br>
+            <input ng-model='addressTwo' type="text" name="address2" placeholder="Address2"><br>
+            <input ng-model='city' type="text" name="city" placeholder="City*"><br>
+            <input ng-model='state' type="text" name="field1" placeholder="State, Region, Province*"><br>
+            <input ng-model='zip' type="number" name="code" placeholder="Zip Code, Postal Code*"><br>
+        </fieldset>
+        <center>{{saveMessage}}</center><br>
+        <input type='button' ng-click='saveContact(false)' value="Save"></input>
+        <input type='button' ng-click='saveContact(true)' value="Save and Continue"></input>
+    </form>
+</div>

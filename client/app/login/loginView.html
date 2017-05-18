@@ -1,0 +1,26 @@
+<div class="form" ng-controller='loginController'>
+  <ul class="tab-group">
+    <li class="tab active"><a href="#!/login">Login</a></li>
+    <li class="tab"><a href='#!/createAccount'>Create Account</a></li>
+  </ul>
+  <div class="tab-content"></div><!--Tab Content-->
+  	
+  <div id="login">   
+    <h1>Welcome Back!</h1><br>
+    <form ng-submit='submitLogin()'>       
+      <div class="field-wrap">
+        <label>ASURITE ID:<span class="req">*</span></label><br>
+        <input type="asurite" ng-model='username' required autocomplete="off"/>
+      </div>
+            
+      <div class="field-wrap">
+        <label>Password:<span class="req">*</span></label><br>
+        <input type="password" ng-model='password' required autocomplete="off"/>
+      </div>
+      <p class="error" ng-model='message' style='color:red;'>{{message}}</p>
+      <p class="error" ng-model='message' ng-show='createAccountSuccess'>{{successMessage}}</p>
+      <p class="forgot"><a href="" ng-click="forgotPassword()">Forgot Password?</a></p>
+      <button class="button" type='submit'>Log In</button> 
+    </form> 
+  </div><!--form-->
+</div><!--Log In-->	

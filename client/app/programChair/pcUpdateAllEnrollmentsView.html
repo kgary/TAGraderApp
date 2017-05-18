@@ -1,0 +1,40 @@
+<div class="container">
+    <div ng-controller='programChairController'>
+        <header>
+            <div class="primary_header">
+                <h1 class="title" ng-model='name'>{{name}}</h1>
+            </div>
+            <nav class="secondary_header" id="menu">
+                <ul>
+                    <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                    <li><a ng-href='#!/pcChangePassword'>Change Password</a></li>
+                    <li><a ng-href='#!/createFacultyAdminAccount'>Add Faculty/Admin User</a></li>
+                    <li><a ng-href='#!/editSchedule'>Edit Schedule</a></li>
+                    <li><a ng-href='#!/evaluationsPC'>Submit Student Evaluation</a></li>
+                    <li><a ng-href='#!/viewApplicationsPC'>View Student Applications</a></li>
+                    <li><a ng-href='#!/courseEdit'>Edit Courses</a></li>
+                    <li><a href="#!/pcUpdateAllEnrollments">Update Enrollment</a></li>
+                    <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+                </ul>
+            </nav>  
+        </header>   
+        <div class="form-updateEnrollments" ng-controller='programChairUpdateAllEnrollmentsController'>
+            <form>
+                <fieldset>
+                    <label><h2>Update Enrollments</h2></label><br>
+                    <label ng-show='noClasses'>There are no classes to update!</label>
+                    <div ng-show='updateAllEnrollments'>
+                        An asterisk denotes an online class<br>
+                        <div ng-repeat="class in classes">
+                            <br>
+                            <label style='margin-right: 20px;'>{{class.class}}</label><input type='number' ng-model='class.enrollment'/>
+                            <br>
+                        </div>
+                        <br><br>
+                        <input type='button' ng-click='saveAllEnrollments()' value='Save Enrollments'/><br>
+                    </div>
+                </fieldset>
+            </form> 
+        </div>
+    </div>
+</div>

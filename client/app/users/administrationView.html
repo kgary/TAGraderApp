@@ -1,0 +1,36 @@
+<div class="container">
+    <div ng-controller='adminController'>
+        <header>
+            <div class="primary_header">
+                <h1 class="title" ng-model='name'>{{name}}</h1>
+            </div>
+            <nav class="secondary_header" id="menu">
+                <ul>
+                    <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                    <li><a ng-href='#!/adminChangePassword'>Change Password</a></li>
+                    <li><a ng-href='#!/viewAppsAdmin'>View Student Applications</a></li>
+                    <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+                </ul>
+            </nav>  
+        </header>   
+        <div class="form-appDeadline">
+            <form>
+                <fieldset>
+                    <label><h2>Application Submission Deadline</h2></label><br>
+                    Applications are currently being taken for the <b>{{deadline.semester}}</b> semester.<br>
+                    Deadline for student applications submissions is <b>{{deadline.date}}</b>.<br>
+                </fieldset>
+            </form>
+            <form>
+                <fieldset>
+                    <label><h2>Status Updates</h2></label>
+                    <h4>Notices</h4>
+                    <admin-notice-directive id='adminNoticeCalls'></admin-notice-directive>
+                    <h4>Course Assignments</h4>
+                    <p><i>An asterisk* denotes an online class</i></p>
+                    <admin-actions-directive id='adminActions'></admin-actions-directive>
+                </fieldset>
+            </form> 
+        </div><!--form-appDeadline-->
+    </div> <!--programChairController-->
+</div><!--Container-->

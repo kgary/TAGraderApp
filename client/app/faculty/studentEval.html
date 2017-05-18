@@ -1,0 +1,42 @@
+<div class="form-evaluation container" ng-controller='studentEvalController'>
+    <header>
+        <div class="primary_header">
+            <h1 class="title" ng-model='name'>{{name}}</h1>
+        </div>
+        <nav class="secondary_header" id="menu">
+            <ul>
+                <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                <li><a ng-href='#!/facultyChangePassword'>Change Password</a></li>
+                <li><a ng-href='#!/evaluation'>Submit Student Evaluation</a></li>
+                <li><a ng-href='#!/viewApplications'>View Student Applications</a></li>
+                <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+            </ul>
+        </nav>  
+    </header>
+    <div class="studentEval">
+        <form name="evalForm">
+            <label><h2>Student Evaluation</h2></label>
+            <div class="populateNames" >
+                Select a Student: <span class="required" ng-show="evalForm.name.$error.required">*Select a Name</span>
+                <select name="name" ng-model='selectName' ng-options="n.ASURITE_ID as n.FormatData for n in studentnames" required></select>
+            </div>
+            1. Student Interaction: <span class="required" ng-show="evalForm.rate1.$error.required">*Select a Rating</span>
+            <select name ="rate1" ng-model='selectOne' ng-options="r for r in ratings" required></select>
+            <textarea type="text" name="comments1" ng-model="commentsOne" placeholder="Comments"></textarea>
+            <br><br>
+            2. Preparedness/Punctuality/Professionalism: <span class="required" ng-show="evalForm.rate2.$error.required">*Select a Rating</span>
+            <select name="rate2" ng-model='selectTwo' ng-options="r for r in ratings" required></select>
+            <textarea type="text" name="comments2" ng-model="commentsTwo" placeholder="Comments"></textarea>
+            <br><br>
+            3. Grading Diligence: <span class="required" ng-show="evalForm.rate3.$error.required">*Select a Rating</span>
+            <select name="rate3" ng-model='selectThree' ng-options="r for r in ratings" required></select>
+            <textarea type="text" name="comments3" ng-model="commentsThree" placeholder="Comments"></textarea>
+            <br><br>
+            4. I would recommend this student for future TA/grading opportunities: <span class="required" ng-show="evalForm.rate4.$error.required">*Select a Rating</span>
+            <select name="rate4" ng-model='selectFour' ng-options="r for r in ratings" required></select>
+            <textarea type="text" name="comments4" ng-model="commentsFour" placeholder="Comments"></textarea>
+            <br><br>
+            <input type='button' ng-click='saveEval(true)' value="Submit Evaluation" ng-disabled='evalForm.$invalid'>
+        </form>
+    </div>
+</div>

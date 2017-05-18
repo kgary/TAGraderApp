@@ -1,0 +1,48 @@
+<div class="SearchApplications container" ng-controller='facultySearchAppController'>
+    <header>
+        <div class="primary_header">
+            <h1 class="title" ng-model='name'>{{name}}</h1>
+        </div>
+        <nav class="secondary_header" id="menu">
+            <ul>
+                <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                <li><a ng-href='#!/facultyChangePassword'>Change Password</a></li>
+                <li><a ng-href='#!/evaluation'>Submit Student Evaluation</a></li>
+                <li><a ng-href='#!/viewApplications'>View Student Applications</a></li>
+                <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+            </ul>
+        </nav>  
+    </header> 
+    <div class="searchApp">
+        <label><h2>View Applications</h2></label>
+        <form>
+            <select ng-model='selectCourse' ng-options="c.CourseSection for c in courses"><option style="display: none" value="">Select a Course</select>
+            <input type='button' ng-click='searchApp()' value="Submit" style='margin-left:20px;'>
+        </form>
+            <div class="display-apps" ng-repeat="name in names">
+              <br>
+                <div ng-hide='name.GPA'><a ng-href='#!/studentInfo/{{name.ASURITE_ID}}'>{{name.Name}}</a></div>
+                <br>
+                <div ng-show='name.GPA'>
+                <table>
+                    <tr>
+                        <th>Student</th>
+                        <th>Qualified</th>
+                        <th>Prefered</th>
+                        <th>Previously TA</th>
+                        <th>Previously Grader</th>
+                        <th>GPA</th>
+                    </tr>
+                    <tr>
+                        <td><a ng-href='#!/studentInfo/{{name.ASURITE_ID}}'>{{name.Name}}</a></td>
+                        <td>{{name.isQualified !=0 ? 'Yes':'No'}}</td>
+                        <td>{{name.isPrefer !=0 ? 'Yes':'No'}}</td>
+                        <td>{{name.isPreviouslyTA !=0 ? 'Yes':'No'}}</td>
+                        <td>{{name.isPreviouslyGrader !=0 ? 'Yes':'No'}}</td>
+                        <td>{{name.GPA}}</td>
+                    </tr>
+                </table>
+            </div>
+         </div>
+    </div>
+</div>

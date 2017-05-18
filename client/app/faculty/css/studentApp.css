@@ -1,0 +1,134 @@
+@charset "utf-8";
+/* CSS Document */
+
+.container {
+    background-color: #FFFFFF;
+    width: 90%;
+    margin: 0 auto;  
+}
+
+.studentApp {
+    max-width: inherit;
+    background: #f4f7f8;
+    margin: auto;
+    padding: 20px;
+    background: #f4f7f8;
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.studentApp label {
+    text-align: center;
+}
+
+.studentApp th {
+    border-bottom: 1.5px solid #B3B3B3;
+    border-right: 1.5px solid #B3B3B3;
+    padding: 10px;
+}
+
+.studentApp td {
+    border-bottom: 1.5px solid #B3B3B3;
+    border-right: 1.5px solid #B3B3B3;
+    padding: 10px;
+}
+
+.studentApp table {
+    border-spacing: 0;
+    border-top: 1.5px solid #B3B3B3;
+    border-left: 1.5px solid #B3B3B3;
+}
+
+.background {
+    overflow-x: scroll;
+    width: 100%;
+}
+
+.languages {
+    overflow-x: scroll;
+    width: 100%;
+}
+
+.calendar {
+    overflow-x: scroll;
+    width: 100%;
+}
+
+.studentApp button {
+    position: relative;
+    display: inline;
+    padding: 10px;
+    color: #FFF;
+    margin: 0 auto;
+    margin-top: 10px;
+    background: #1abc9c;
+    font-size: 15px;
+    text-align: center;
+    font-style: normal;
+    width: 150px;
+    border: 1px solid #16a085;
+    border-width: 1px 1px 3px;
+    margin-bottom: 10px;
+}
+
+.studentApp button:hover,
+#inline-label:hover {
+    background: #109177;
+}
+
+.studentApp input[type="submit"] {
+    position: relative;
+    display: inline;
+    padding: 10px;
+    color: #FFF;
+    margin: 0 auto;
+    margin-top: 10px;
+    background: #1abc9c;
+    font-size: 12px;
+    text-align: center;
+    font-style: normal;
+    width: 180px;
+    border: 1px solid #16a085;
+    border-width: 1px 1px 3px;
+    margin-bottom: 10px;
+}
+
+.studentApp input[type="submit"]:hover,
+#inline-label:hover {
+    background: #109177;
+}
+
+.primary_header {
+    width: 100%;
+    background-color: BLACK;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    clear: left;
+    border-bottom: 2px solid;
+    color: white;
+    text-align: center; 
+}
+
+.secondary_header ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #B3B3B3;
+}
+
+.secondary_header li {
+    float: left;
+}
+
+.secondary_header li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.secondary_header li a:hover {
+    background: #1abc9c;
+    color: white;
+}

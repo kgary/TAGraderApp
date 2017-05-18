@@ -1,0 +1,48 @@
+<div class="container">
+    <header>
+        <div class="primary_header">
+            <h1 class="title" ng-model='name'>{{name}}</h1>
+        </div>
+        <nav class="secondary_header" id="menu">
+            <ul>
+                <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                <li><a ng-href='#!/studentChangePassword'>Change Password</a></li>
+                <li class='dropdown' style='float:left;'>
+                    <button class='dropbtn'>{{link}}</button>
+                    <div class='dropdown-content' style="left:0;">
+                        <a ng-href='#!/contactInfo'>Contact Info</a><br>
+                        <a ng-href='#!/education'>Education</a><br>
+                        <a ng-href='#!/employment'>Employment</a><br>
+                        <a ng-href='#!/availability'>Availability</a><br>
+                        <a ng-href='#!/languages'>Languages</a><br>
+                        <a ng-href='#!/courses'>Courses</a>
+                    </div>
+                </li>
+                <li><a ng-href='#!/helpList'>Help</a></li>
+                <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="form-studentHome">
+        <div><br><br>
+            Now taking applications for the {{semesterName}} semester!<br>
+            Please complete your application by {{deadline}}
+        </div>
+        <br>
+        <div>Application Status: {{status}}</div>
+        <h2>Calls To Action</h2>
+        <h4>Notices</h4>
+        <student-notice-directive id='noticeCalls'></student-notice-directive>
+        <h4>Application</h4>
+        <div style="width:1px">
+            <fieldset>
+                <i>Feedback from Program Chair:</i><br><br>
+                <textarea readonly rows="10" cols="100" ng-model='applicationFeedback'></textarea><br><br>
+                <input type='checkbox' ng-model='hasComplied' ng-show='hasFeedback' ng-true-value='1' ng-false-value='0'><label class='cbLabel' ng-show='hasFeedback'>I have complied with the Program Chair feedback</label><br><br>
+                <input type='button' value='Save Compliance' ng-click='saveHasComplied()' ng-show='hasFeedback'>
+                {{saveMessage}}
+            </fieldset>
+        </div>
+        <student-actions-directive id='appCalls'></student-actions-directive>
+    </div>
+</div> 

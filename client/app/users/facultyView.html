@@ -1,0 +1,44 @@
+<div class="container">
+    <div ng-controller='facultyController' >
+        <header>
+            <div class="primary_header">
+                <h1 class="title" ng-model='name'>{{name}}</h1>
+            </div>
+            <nav class="secondary_header" id="menu">
+                <ul>
+                    <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                    <li><a ng-href='#!/facultyChangePassword'>Change Password</a></li>
+                    <li><a ng-href='#!/evaluation'>Submit Student Evaluation</a></li>
+                    <li><a ng-href='#!/viewApplications'>View Student Applications</a></li>
+                    <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="form-requests">
+            <form>
+                <fieldset>
+                    <label><h2>Select One of Your Classes</h2></label>
+                    <select ng-model='selectCourse' ng-options="class.ScheduleID as class.class for class in classes" ng-change="go(selectCourse)"><option style="display: none" value="">Select a Course</select>
+                    <div ng-show='showClass'>
+                        <label><h2>{{classTitle}}</h2></label>
+                        <label><h4>Your Requests</h4></label>
+                        <label style='margin-right: 20px;'>1st Choice:</label><input type='text' ng-model='studentOne' placeholder='ASURITE ID'/>
+                        <br>
+                        <label style='margin-right: 20px;'>2nd Choice:</label><input type='text' ng-model='studentTwo' placeholder='ASURITE ID'/>
+                        <br>
+                        <label><h4>Students Assigned To Class</h4></label>
+                        <label style='margin-right: 20px;'>TA:  {{ta}}</label><label style='margin-right: 20px;'>Assigned Status:  {{taStatus}}</label>
+                        <br><br>
+                        <label style='margin-right: 20px;'>Second TA:  {{taTwo}}</label><label style='margin-right: 20px;'>Assigned Status:  {{taTwoStatus}}</label>
+                        <br><br>
+                        <label style='margin-right: 20px;'>Grader:  {{graderOne}}</label><label style='margin-right: 20px;'>Assigned Status:  {{graderOneStatus}}</label>
+                        <br><br>
+                        <label style='margin-right: 20px;'>Second Grader:  {{graderTwo}}</label><label style='margin-right: 20px;'>Assigned Status:  {{graderTwoStatus}}</label>
+                        <br><br>
+                        <input type='button' ng-click='saveNewRequests(selectCourse)' value='Save New Requests'/><br>
+                    </div>                   
+                </fieldset>
+            </form> 
+        </div>
+    </div>
+</div> 

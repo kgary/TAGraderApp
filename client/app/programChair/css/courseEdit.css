@@ -1,0 +1,113 @@
+@charset "utf-8";
+/* CSS Document */
+
+.container {
+    background-color: #FFFFFF;
+    width: 90%;
+    margin: 0 auto;  
+}
+
+.primary_header {
+	width: 100%;
+	background-color: BLACK;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	clear: left;
+	border-bottom: 2px solid ;
+}
+
+.title {
+	font-weight: bold;
+	font-style: normal;
+	font-family: "Source Sans Pro";
+	text-align: center;
+	color: #FFFFFF;
+	letter-spacing: 2px;
+}
+
+.editCourses {
+    max-width: inherit;
+    background: #f4f7f8;
+    margin: auto;
+    padding: 20px;
+    background: #f4f7f8;
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.editCourses label {
+    text-align: center;
+}
+
+.editCourses button {
+    position: relative;
+    display: inline;
+    padding: 5px;
+    color: #FFF;
+    margin: 0 auto;
+    margin-top: 10px;
+    background: #1abc9c;
+    font-size: 15px;
+    text-align: center;
+    font-style: normal;
+    width: 100px;
+    border: 1px solid #16a085;
+    border-width: 1px 1px 3px;
+    margin-bottom: 10px;
+}
+
+.editCourses button:hover,
+#inline-label:hover {
+    background: #109177;
+}
+
+.editCourses input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.editCourses input[type="button"] {
+    position: relative;
+    display: inline;
+    padding: 5px;
+    color: #FFF;
+    margin: 0 auto;
+    margin-top: 10px;
+    background: #1abc9c;
+    font-size: 15px;
+    text-align: center;
+    font-style: normal;
+    width: 100px;
+    border: 1px solid #16a085;
+    border-width: 1px 1px 3px;
+    margin-bottom: 10px;
+}
+
+.editCourses input[type="button"]:hover,
+#inline-label:hover {
+    background: #109177;
+}
+
+.secondary_header ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #B3B3B3;
+}
+
+.secondary_header li {
+    float: left;
+}
+
+.secondary_header li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.secondary_header li a:hover {
+    background: #1abc9c;
+    color: white;
+}

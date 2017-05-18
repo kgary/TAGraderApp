@@ -1,0 +1,137 @@
+@charset "utf-8";
+/* CSS Document */
+.form-availability {
+    max-width: 1100px;
+    padding: 10px 20px;
+    background: #f4f7f8;
+    margin: 10px auto;
+    padding: 20px;
+    background: #f4f7f8;
+    border-radius: 8px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.form-availability fieldset{
+    border: none;   
+}
+
+.form-availability legend {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.form-availability .number {
+    background: #1abc9c;
+    color: #fff;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    font-size: 0.8em;
+    margin-right: 4px;
+    line-height: 30px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+    border-radius: 15px 15px 15px 0px;
+}
+
+.form-availability .h3 {
+    font-family: Georgia, "Times New Roman", Times, serif;    
+}
+
+.saveButtons input[type="button"] {
+    position: relative;
+    display: inline-block;
+    padding: 19px 39px 18px 39px;
+    color: #FFF;
+    margin: 0 auto;
+    background: #1abc9c;
+    font-size: 18px;
+    text-align: center;
+    font-style: normal;
+    width: 100%;
+    border: 1px solid #16a085;
+    border-width: 1px 1px 3px;
+    margin-bottom: 10px;
+}
+
+.saveButtons input[type="button"]:hover {
+    background: #109177;
+}
+
+.selectionButtons input[type="button"] {
+    -moz-box-shadow: 0px 1px 0px 0px #1abc9c;
+    -webkit-box-shadow: 0px 1px 0px 0px #1abc9c;
+    box-shadow: 0px 1px 0px 0px #1abc9c;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #1abc9c), color-stop(1, #1abc9c));
+    background:-moz-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:-webkit-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:-o-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:-ms-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:linear-gradient(to bottom, #1abc9c 5%, #1abc9c 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1abc9c', endColorstr='#1abc9c',GradientType=0);
+    background-color:#1abc9c;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    border-radius:8px;
+    border:2px solid #1abc9c;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Georgia;
+    font-size:14px;
+    font-weight:bold;
+    padding:7px 14px;
+    text-decoration:none;
+    text-shadow:0px -1px 0px #1abc9c;
+}
+
+.selectionButtons input[type="button"]:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #1abc9c), color-stop(1, #1abc9c));
+    background:-moz-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:-webkit-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:-o-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:-ms-linear-gradient(top, #1abc9c 5%, #1abc9c 100%);
+    background:linear-gradient(to bottom, #1abc9c 5%, #1abc9c 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1abc9c', endColorstr='#1abc9c',GradientType=0);
+    background: #109177;
+}
+
+.selectionButtons input[type="button"]:focus {outline:none !important;}
+
+table, th , td  {
+    width: 100%;
+    border: 1px solid grey;
+    border-collapse: collapse;
+    padding: 5px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+    
+table tr:nth-child(odd) {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    background-color: #f4f7f8;;
+}
+    
+table tr:nth-child(even) {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    background-color: #d2d9dd;
+}
+
+a:link, a:visited {
+    background-color: white;
+    color: black;
+    border: 2px solid green;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a:hover, a:active {
+    background-color: #109177;
+    color: white;
+}
+
+a.active:visited {
+    background-color:#109177;
+    color: white;
+}

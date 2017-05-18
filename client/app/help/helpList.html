@@ -1,0 +1,52 @@
+<div class="container">
+    <header>
+        <div class="primary_header">
+            <h1 class="title" ng-model='name'>{{name}}</h1>
+        </div>
+        <nav class="secondary_header" id="menu">
+            <ul>
+                <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                <li><a ng-href='#!/studentChangePassword'>Change Password</a></li>
+                <li class='dropdown' style='float:left;'>
+                    <button class='dropbtn'>{{link}}</button>
+                    <div class='dropdown-content' style="left:0;">
+                        <a ng-href='#!/contactInfo'>Contact Info</a><br>
+                        <a ng-href='#!/education'>Education</a><br>
+                        <a ng-href='#!/employment'>Employment</a><br>
+                        <a ng-href='#!/availability'>Availability</a><br>
+                        <a ng-href='#!/languages'>Languages</a><br>
+                        <a ng-href='#!/courses'>Courses</a>
+                    </div>
+                </li>
+                <li><a ng-href='#!/helpList'>Help</a></li>
+                <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br><br><section>
+      <div>
+        <h1>Help Topics</h1>
+        <label>search: </label>
+        <input ng-model="query.topic" placeholder="Search topics" autofocus>
+
+        <label class="formgroup">
+          <input type="radio" ng-model="direction" topic="direction" checked>
+          Ascending
+         </label>
+        <label class="formgroup">
+          <input type="radio" ng-model="direction" topic="direction" value="reverse">
+          Descending
+        </label>
+      </div>
+      <ul class="helplist">
+        <label class="help cf" ng-repeat="item in help_data | filter: query | orderBy: listOrder:direction">
+          <a href="#!/helpDetails/{{help_data.indexOf(item)}}">
+            <div class="info">
+              <h2>{{item.topic}}</h2>
+            </div>
+          </a>
+          <h3>{{item.description}}</h3>
+        </label>
+      </ul>  
+    </section>
+</div>

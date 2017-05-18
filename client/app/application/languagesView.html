@@ -1,0 +1,75 @@
+<div class="form-languages" ng-controller='languagesInfoController'>
+    <center>
+        <a href='' ng-click='logout()'>Logout</a>
+        <a ng-href='#!/studentHome'>Go Home</a> >>
+        <a ng-href='#!/contactInfo'>Contact Info</a> >
+        <a ng-href='#!/education'>Education</a> >
+        <a ng-href='#!/employment'>Employment</a> >
+        <a ng-href='#!/availability'>Availability</a> >
+        <a ng-href='#!/languages' class="active">Languages</a> >
+        <a ng-href='#!/courses'>Courses</a>
+    </center><br><br>
+    <form>
+        <fieldset>
+            <legend><span class="number">1</span>Languages*</legend>
+            <p>*To deselect a language double click selection</p>
+            <table>
+                <tr>
+                    <th>Language</th>
+                    <th>Expert</th> 
+                    <th>Proficient</th> 
+                    <th>Novice</th>  
+                </tr>
+                <tr ng-repeat="language in languages">
+                    <td>{{language.name}}</td>
+                    <td><center><input type='radio' ng-model='language.level' value='Expert' ng-dblclick='deselectLevel(this)'></center></td>
+                    <td><center><input type='radio' ng-model='language.level' value='Proficient' ng-dblclick='deselectLevel(this)'></center></td>
+                    <td><center><input type='radio' ng-model='language.level' value='Novice' ng-dblclick='deselectLevel(this)'></center></td>
+                </tr>
+            </table>
+            <p ng-model='requiremessage' style='color:red;'>{{message}}</p>
+            <div id='spaceforlanguages'></div>
+            <addlanguagesbutton></addlanguagesbutton><br><br>  
+        </fieldset>
+    </form>
+    <form>
+        <fieldset>
+            <legend><span class="number">2</span>IDEs*</legend>
+            <table>
+                <tr>
+                    <th>IDE</th>
+                    <th>Familiarity</th>   
+                </tr>
+                <tr ng-repeat="ide in ides">
+                    <td>{{ide.name}}</td>
+                    <td><center><input type='checkbox' ng-model=ide.box ng-true-value='1' ng-false-value='0'></center></td>
+                </tr>
+            </table>
+            <br>
+            <div id='spaceforides'></div>
+            <addidesbutton></addidesbutton><br><br>
+        </fieldset>
+    </form>
+    <form>
+        <fieldset>
+            <legend><span class="number">3</span>Collaborative Tools*</legend>
+            <table>
+                <tr>
+                    <th>Tool</th>
+                    <th>Familiarity</th>   
+                </tr>
+                <tr ng-repeat="tool in tools">
+                    <td>{{tool.name}}</td>
+                    <td><center><input type='checkbox' ng-model=tool.box ng-true-value='1' ng-false-value='0'></center></td>
+                </tr>
+            </table>
+            <br>
+            <div id='spacefortools'></div>
+            <addtoolsbutton></addtoolsbutton>
+        </fieldset>
+    </form>
+    <br><br><br>
+    <center>{{saveMessage}}</center><br>
+    <input type='button' ng-click='saveLanguages(false)' value="Save"></input>
+    <input type='button' ng-click='saveLanguages(true)' value="Save and Continue"></input>
+</div>

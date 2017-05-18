@@ -1,0 +1,56 @@
+<div class="form-education" ng-controller='educationInfoController'>
+    <center>
+        <a href='' ng-click='logout()'>Logout</a>
+        <a ng-href='#!/studentHome'>Go Home</a> >>
+        <a ng-href='#!/contactInfo'>Contact Info</a> >
+        <a ng-href='#!/education' class="active">Education</a> >
+        <a ng-href='#!/employment'>Employment</a> >
+        <a ng-href='#!/availability'>Availability</a> >
+        <a ng-href='#!/languages'>Languages</a> >
+        <a ng-href='#!/courses'>Courses</a>
+    </center><br><br>
+    <form>
+        <fieldset>
+            <legend><span class="number">1</span>Education</legend>
+            <label for="programs">Current Degree Program*:</label>
+            <select ng-model="selectedDegree" ng-options="x for x in degrees" id="program" name="program" required></select>
+            <div ng-show="selectedDegree==='Ph.D Other' || selectedDegree==='M.S. Other' || selectedDegree==='Undergraduate'">
+                <input ng-model='otherDegree' type="text" id="textphd" name="otherphd" placeholder="Type in the name of your degree program*"><br>
+            </div>
+            <input ng-model='gpa' type="number" name="gpa" placeholder="GPA*">
+        </fieldset>
+    </form> 
+    <form>
+        <fieldset>
+            <legend><span class="number">2</span>Additional Information</legend>
+            <input input ng-model='probation' ng-true-value='1' ng-false-value='0' ng-init='probation=0' type="checkbox" id="probation-chk" name="academic-probation" value="academic-probation"> I am on academic probation<br>
+            <div ng-show="probation===1">
+                <p class="probation" ng-model='probationMessage' style="color:red;">Your application won't be considered until the academic probation has been cleared.</p>
+            </div>
+            <input ng-model='fourPlusOne' ng-true-value='1' ng-false-value='0' ng-init='fourPlusOne=0' type="checkbox" name="4to1" value="4to1"/> I'm in the 4 to 1 program<br>
+            <input ng-model='fullTime' ng-true-value='1' ng-false-value='0' ng-init='fullTime=0' type="checkbox" name="ft" value="ft"/> I will be a full-time student for the {{semesterName}} semester<br><br>
+            <label>Date You Started At Arizona State University*:</label>
+            <input ng-model='session' type="date" name="date"><br>
+            <label>Graduation Date*:</label>
+            <select ng-model="gradDate" ng-options="x for x in gradDates"></select><br> 
+        </fieldset>     
+    </form>
+    <form enctype='multipart/form-data'>
+        <fieldset>
+            <legend><span class="number">3</span>File Attachment (PDF Files Only)</legend>
+                <label>iPOS:</label>
+                <input type="text" id="ipos" ng-model='iposInput'>
+                <input type="file" name="ifile" id="ipfile" ng-model='iposFile' file-input='iposFile' onchange="angular.element(this).scope().iposFileNameChanged(this.files)" hidden/>
+                <label class='myButton' for="ipfile" id="inline-label">Choose File</label><br><br>
+                <div ng-show='iposUploadErrorMessage' style='color:Red;'>{{iposErrorMessage}}<br><br></div>
+                <label>Transcript:</label>
+                <input type="text" id="transcript" ng-model='transcriptInput'>
+                <input type="file" name="tfile" id="trfile" ng-model='transcriptName' file-input='tranFile' onchange="angular.element(this).scope().transcriptFileNameChanged(this.files)" hidden/>
+                <label class='myButton' for="trfile" id="inline-label">Choose File</label><br><br>
+                <div ng-show='transcriptUploadErrorMessage' style='color:Red;'>{{transcriptErrorMessage}}<br><br></div>
+        </fieldset>
+    </form> 
+    <center>{{saveMessage}}</center><br>
+    <input type='button' ng-click='uploadIpos(); uploadTranscript(); saveEducation(false)' value="Save"/>
+    <input type='button' ng-click='uploadIpos(); uploadTranscript(); saveEducation(true)' value="Save and Continue"/>
+</div>

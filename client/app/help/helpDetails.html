@@ -1,0 +1,37 @@
+<div class="container">
+    <header>
+        <div class="primary_header">
+            <h1 class="title" ng-model='name'>{{name}}</h1>
+        </div>
+        <nav class="secondary_header" id="menu">
+            <ul>
+                <li><a href='' ng-show='displayHome()' ng-click='goHome()'>Home</a></li>
+                <li><a ng-href='#!/studentChangePassword'>Change Password</a></li>
+                <li class='dropdown' style='float:left;'>
+                    <button class='dropbtn'>{{link}}</button>
+                    <div class='dropdown-content' style="left:0;">
+                        <a ng-href='#!/contactInfo'>Contact Info</a><br>
+                        <a ng-href='#!/education'>Education</a><br>
+                        <a ng-href='#!/employment'>Employment</a><br>
+                        <a ng-href='#!/availability'>Availability</a><br>
+                        <a ng-href='#!/languages'>Languages</a><br>
+                        <a ng-href='#!/courses'>Courses</a>
+                    </div>
+                </li>
+                <li><a ng-href='#!/helpList'>Help</a></li>
+                <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br><br>
+<section class="helpinfo">
+  <div class="help cf">
+    <a href="#!/helpDetails/{{prevItem}}" class="btn btn-left">&lt;Last</a>
+    <a href="#!/helpDetails/{{nextItem}}" class="btn btn-right">Next&gt;</a>
+    <h1>{{help_data[whichItem].topic}}</h1>
+    <div class="info">
+      <div class="descrip">{{help_data[whichItem].description}}</div>
+    </div>
+  </div>
+  <br><a href="#!/helpList">&laquo; Back to search</a>
+</section>

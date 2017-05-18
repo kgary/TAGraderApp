@@ -1,0 +1,42 @@
+[
+  {
+    "topic":"A. Starting an Application",
+    "description":"To start an application, the student must click on the ‘Application’ button on their home page. The student will be presented with a series of pages requesting contact information, education information, employment information, availability for each semester, programming skills, and competencies and previous experience in ASU courses. The student will have the option to save input and remain on a page, or save input and move to the next page of the application. The application is considered submitted when the student has completed and saved all pages."
+  },
+  {
+    "topic":"B. Contact Info Page",
+    "description":"This page prompts the student to enter personal contact information."
+  },
+  {
+    "topic":"C. Education Page",
+    "description":"This page prompts the student to enter details about their educational program and status of their educational progress. This page also allows the user to upload their iPOS and transcripts as part of the application."
+  },
+  {
+    "topic":"D. Employment Page",
+    "description":"This page prompts the student to enter employment information regarding how many hours they can work, and if they have any outside employment obligations. The student is responsible for entering the correct number of combined hours they are allowed to work by law at both ASU and an outside employer, if applicable. The system will check the hours entered, and based on what the student inputs, the system will notify the student if they must change the number of hours they are seeking. This page also allow the user to upload their resume as part of the application."
+  },
+  {
+    "topic":"E. Availability Page",
+    "description":"This page prompts the student to select their work availability for Monday through Friday of each week of the upcoming semester. The semester is set by the Program Chair in the application deadline. The student user selects their availability for each day in the form of two-hour blocks. An option exists for the student to clear all selections made, select all time blocks, as well as an option to restore the selections from the user’s last save."
+  },
+  {
+    "topic":"F. Languages",
+    "description":"This page prompts the student to select from a list of programming languages, IDEs, and collaborative tools for which they may have some experience. Each selection made should be accompanied by an experience level selection; the experience level choices are Novice, Proficient, and Expert."
+  },
+  {
+    "topic":"G. Courses Page",
+    "description":"This page prompts the student to select courses for which they have previously taken, feel qualified to TA or grade, and/or have previously been a TA or Grader. Only the courses that the student makes at least one selection on will be saved. If the student removes all selections for one course, then that course will no longer be saved in the database. As such, for any courses the student has previously added and saved, if all selections are removed for that courses or courses, then those courses will be removed from the database."
+  },
+  {
+    "topic":"H. Editing and Resuming an Application",
+    "description":"The student can resume an incomplete application or edit a submitted application by clicking on the application button on the home page. Each application page will display the student’s previously saved responses for editing. If the student is resuming an incomplete application, they will be taken to the last saved position in the application."
+  },
+  {
+    "topic":"I. Application Status",
+    "description":"The student’s application status is displayed on the home page. The application statuses are: New, Incomplete, and Complete. The status is updated as application pages are completed by the user. A new student user’s application will initially be set to New after account creation. If a student’s application is set to Incomplete, then all needed items will for the application to be considered Complete will be listed in the Call to Action section of the home page."
+  },
+  {
+    "topic":"J. Home Pages Notifications",
+    "description":"This section of the student home page displays notices to the student and directives to the student to complete missing required fields of the application. The missing fields are listed by application page name, with a link to take the user to that part of the application. Items are removed from the section as they are completed. If a page is complete, it will not be displayed as part of the section. Each page is checked for completeness upon saving, so an application can be completed in any page order. This section will also notify the user of upcoming application submission deadlines, as set by the Program Chair. If the student has also indicated that they are on academic probation, then they will be reminded in the section as well. Also displayed is any feedback received from the Program Chair. If the student has any feedback, it will be displayed in the designated area, otherwise ‘No feedback from Program Chair’ will be shown. If the student does have feedback, a checkbox is provided so that the student can check it and indicate to the Program Chair that the student has complied with any directive feedback."
+  }
+]

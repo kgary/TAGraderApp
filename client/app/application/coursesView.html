@@ -1,0 +1,40 @@
+<div class="form-courses" ng-controller='coursesInfoController'>
+    <center>
+        <a href='' ng-click='logout()'>Logout</a>
+        <a ng-href='#!/studentHome'>Go Home</a> >>
+        <a ng-href='#!/contactInfo'>Contact Info</a> >
+        <a ng-href='#!/education'>Education</a> >
+        <a ng-href='#!/employment'>Employment</a> >
+        <a ng-href='#!/availability'>Availability</a> >
+        <a ng-href='#!/languages'>Languages</a> >
+        <a ng-href='#!/courses' class="active">Courses</a>
+    </center><br><br>
+    <form>
+        <fieldset>
+            <legend><span class="number">1</span>Course Competancies*</legend>
+            <table>
+                <tr>
+                    <th>Course</th>
+                    <th>Prefer</th> 
+                    <th>Qualified</th> 
+                    <th>Previously TA</th> 
+                    <th>Previously Grader</th> 
+                </tr>
+                <tr ng-repeat="course in courses">
+                    <td>{{course.CourseSection}} {{course.CourseName}} {{course.name}}</td>
+                    <td><center><input name='Prefer' type='checkbox' ng-model='course.prefer' ng-true-value='1' ng-false-value='0'></center></td>
+                    <td><center><input name='Qualified' type='checkbox' ng-model='course.qualified' ng-true-value='1' ng-false-value='0'></center></td>
+                    <td><center><input name='Previously TA' type='checkbox' ng-model='course.prevTA' ng-true-value='1' ng-false-value='0'></center></td>
+                    <td><center><input name='Previously Grader' type='checkbox' ng-model='course.prevGrader' ng-true-value='1' ng-false-value='0'></center></td>
+                </tr>
+            </table>
+            <p ng-model='requiremessage' style='color:red;'>{{message}}</p>
+            <div id='spaceforcourses'></div>
+            <addcoursesbutton></addcoursesbutton><br><br>  
+        </fieldset>
+    </form>
+    <br><br><br>
+    <center>{{saveMessage}}</center><br>
+    <input type='button' ng-click='saveCourses(false)' value="Save"></input>
+    <input type='button' ng-click='saveCourses(true)' value="Save and Go to Home"></input>
+</div>

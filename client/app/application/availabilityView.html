@@ -1,0 +1,46 @@
+<div class="form-availability" ng-controller='availabilityInfoController'>
+    <center>
+        <a href='' ng-click='logout()'>Logout</a>
+        <a ng-href='#!/studentHome'>Go Home</a> >>
+        <a ng-href='#!/contactInfo'>Contact Info</a> >
+        <a ng-href='#!/education'>Education</a> >
+        <a ng-href='#!/employment'>Employment</a> >
+        <a ng-href='#!/availability' class="active">Availability</a> >
+        <a ng-href='#!/languages'>Languages</a> >
+        <a ng-href='#!/courses'>Courses</a>
+    </center><br><br>
+    <form>
+        <fieldset>
+            <legend><span class="number">1</span>Availability*</legend>
+            <div>
+            	<h3>{{semesterName}} Schedule</h3>
+                <table>
+          			<tr>
+             			<th>Time</th>
+             			<th ng-repeat='day in days'>{{day}}</th> 
+           			</tr>
+          			<tr ng-repeat="time in times">
+                        <td>{{time.startHour}}-{{time.stopHour}}</td>
+                        <td><input name='Monday' type='checkbox' value={{time}}></td>
+                        <td><input name='Tuesday' type='checkbox' value={{time}}></td>
+                        <td><input name='Wednesday' type='checkbox' value={{time}}></td>
+                        <td><input name='Thursday' type='checkbox' value={{time}}></td>
+                        <td><input name='Friday' type='checkbox' value={{time}}></td>
+                    </tr>
+        		</table>
+            </div>
+            <br>
+            <div class='selectionButtons'>
+                <input type='button' ng-click="checkAll()" value='Select All'/>
+                <input type='button' ng-click="resetAll()" value='Deselect All'/>
+                <input type='button' ng-click="setPreviousSchedule()" value='Last Saved'/>
+            </div>
+            <br>
+            <center>{{saveMessage}}</center><br>
+            <div class='saveButtons'>
+                <input type='button' ng-click="saveAvailability(false)" value='Save'/>
+                <input type='button' ng-click="saveAvailability(true)" value='Save and Continue'/>
+            </div>
+        </fieldset>     
+    </form>   
+</div>

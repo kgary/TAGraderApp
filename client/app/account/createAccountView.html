@@ -1,0 +1,57 @@
+<div class="form" ng-controller='createAccountController'>
+    <ul class="tab-group">
+        <li class="tab"><a href="#!/login">Login</a></li>
+        <li class="tab active"><a href="#!/createAccount">Create Account</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="signup">          
+            <h1>Create Account</h1>        
+            <form ng-submit='submitAccount()'>        
+                <div class="field-wrap">
+                    <label>First Name:<span class="req">*</span></label><br>
+                    <input type="fname" ng-model='firstname' required autocomplete="off"/>
+                </div>
+                <div class="field-wrap">
+                    <label>Middle Name:</label><br>
+                    <input type="mname" ng-model='middlename' autocomplete="off"/>
+                </div>
+                <div class="field-wrap">
+                    <label>Last Name:<span class="req">*</span></label><br>
+                    <input type="lname" ng-model='lastname' required autocomplete="off"/>
+                </div>
+                <div class="field-wrap">
+                    <label>ASURITE ID:<span class="req">*</span></label><br>
+                    <input type="fname" ng-model='asuriteID' required autocomplete="off"/>
+                </div>
+                <div class="field-wrap">
+                    <div class="help">
+                        <label>ASU Email <span class="req">*</span></label><br>
+                        <input type="email" ng-model='email' ng-change='emailError=false' required autocomplete="off"/>
+                        <img src="/assets/images/pwreq.png" alt="Req" style="width:20px;height:20px;" title='Must use ASU email'/>
+                    </div>
+                </div>
+                <div class="field-wrap">
+                    <div class="help">
+                        <label>Set A Password<span class="req">*</span></label><br>
+                        <input type="password" ng-model='password1' ng-change='passwordError=false' required autocomplete="off"/>
+                        <img src="/assets/images/pwreq.png" alt="Req" style="width:20px;height:20px;" 
+                        title='Password Requirements:
+                        -8-20 Characters
+                        -1 Lowercase Letter
+                        -1 Uppercase Letter
+                        -1 Special Character(#?!@$%^&*-)
+                        -1 Number'/>
+                    </div>
+                </div>
+                <div class="field-wrap">
+                    <label>Re-enter Password<span class="req">*</span></label><br>
+                    <input type="password" ng-model='password2' ng-change='passwordError=false' required autocomplete="off"/>
+                </div>
+                <p class="error" ng-model='userErrorMessage' ng-show='userError' style='color:red'><br><br>{{userErrorMessage}}</p>
+                <p class="error" ng-model='emailErrorMessage' ng-show='emailError' style='color:red'><br><br>{{emailErrorMessage}}</p>
+                <p class="error" ng-model='passwordErrorMessage' ng-show='passwordError' style='color:red'><br>{{passwordErrorMessage}}</p>
+                <button class="create-button" type="submit">Create Account</button>  
+            </form>
+        </div>
+    </div>   
+ </div>
