@@ -13,8 +13,8 @@ var express = require('express'),
     jwt = require('jsonwebtoken'),
     favicon = require('serve-favicon'),
     directoryToServe = 'client',
-    https = require('https'),
-    port = 3443;
+//    https = require('https'),  -- not running https internally as running apache proxy in front
+    port = 8030;
 
 var app = express();
 
@@ -56,15 +56,19 @@ var logInRouter = require('./serverRoutes/logInRouter/logInRouter.js'),
     administrativeRouter = require('./serverRoutes/administrativeRouter/administrativeRouter.js'),
     studentRouter = require('./serverRoutes/studentRouter/studentRouter.js');
 
-// Use ssl certificate and key
-var httpsOptions = {
-  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
-  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
-};
+// Use ssl certificate and key - commented out now that we are not doing https
+//var httpsOptions = {
+//  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
+//  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
+//};
 
 // Create https server
-https.createServer(httpsOptions, app).listen(port, function () {
-    console.log('Server running at https://tagraderapp.fulton.asu.edu:3443');
+//https.createServer(httpsOptions, app).listen(port, function () {
+//    console.log('Server running at https://tagraderapp.fulton.asu.edu:3443');
+//});
+
+app.listen(8030, function () {
+   console.log('Example app listening on port 8030!')
 });
 
 //  Send requests to correct router

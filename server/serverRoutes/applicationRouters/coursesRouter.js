@@ -17,7 +17,7 @@ var mysql_pool  = mysql.createPool({
     connectionLimit : 100,
     host            : 'localhost',
     user            : 'root',
-    password        : 'sblpass1',
+    password        : 'root',
     database        : 'sblDB'
 });
 
