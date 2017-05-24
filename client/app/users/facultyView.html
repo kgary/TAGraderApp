@@ -20,7 +20,7 @@
                     <label><h2>Select One of Your Classes</h2></label>
                     <select ng-model='selectCourse' ng-options="class.ScheduleID as class.class for class in classes" ng-change="go(selectCourse)"><option style="display: none" value="">Select a Course</select>
                     <div ng-show='showClass'>
-                        <label><h2>{{classTitle}}</h2></label>
+                        <label><h2>{{classTitle}}, ID: {{classScheduleID}}</h2></label>
                         <label><h4>Your Requests</h4></label>
                         <label style='margin-right: 20px;'>1st Choice:</label><input type='text' ng-model='studentOne' placeholder='ASURITE ID'/>
                         <br>

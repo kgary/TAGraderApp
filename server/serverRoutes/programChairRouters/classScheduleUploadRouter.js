@@ -39,7 +39,7 @@ router.use(multer({storage : storage}).any());
 
 //  Create mysql connection pool
 var mysql_pool  = mysql.createPool({
-    connectionLimit : 100,
+    connectionLimit : 5,
     host            : 'localhost',
     user            : 'root',
     password        : 'root',
@@ -73,11 +73,13 @@ router.post('/', function(req, res) {
                     res.send({error : 1});
                 })
                 .on('data', function(data) {
+console.log("FOUND DATA: " + data);
                     var temp = [];
                     temp.push(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
                     row.push(temp)
                 })
                 .on('end', function(data) {
+console.log("FOUND END: " + data);
                     row.splice(0, 1);
                     for (var i = 0; i < row.length; i++) {
                         for (var j = 0; j < row[i].length; j++) {
@@ -93,28 +95,29 @@ router.post('/', function(req, res) {
                         row[i].splice(11, 0, "Incomplete", 0, 0)
                         if (i === row.length - 1) {
                             connection.query('DELETE FROM Schedule_',  function(err2, rows) {
+console.log("PREPARING QUERY: " + rows);
                                 if(err2) {
-                                    console.log('Error performing query: ' + err2);
+                                    console.log('Error performing query DELETE FROM Schedule_: ' + err2);
                                     throw err2;
                                 } else {
                                     connection.query('INSERT INTO Schedule_ (SessionIs, Location, Subject, CatalogNumber, CourseNumber, CourseTitle, Days, StartHours, EndHours, FirstName, LastName, AssignedStatus, TARequiredHours, GraderRequiredHours, EnrollmentNumPrev) VALUES ?', [row], function(err3) { 
                                         if(err3) {
-                                            console.log('Error performing query: ' + err3);
+                                            console.log('Error performing query INSERT INTO Schedule_: ' + [row] + ' error: ' + err3);
                                             res.send({error : 1});
                                         } else {
                                             connection.query('DELETE FROM Student_Request', function(err4) { 
                                                 if(err4) {
-                                                    console.log('Error performing query: ' + err4);
+                                                    console.log('Error performing query DELETE FROM Student_Request: ' + err4);
                                                     throw err4;
                                                 } else {
                                                     connection.query('DELETE FROM Placement', function(err5) { 
                                                         if(err5) {
-                                                            console.log('Error performing query: ' + err5);
+                                                            console.log('Error performing query DELETE FROM Placement: ' + err5);
                                                             throw err5;
                                                         } else {
                                                             connection.query('DELETE FROM Enrollment', function(err6) { 
                                                                 if(err6) {
-                                                                    console.log('Error performing query: ' + err6);
+                                                                    console.log('Error performing query DELETE FROM Enrollment: ' + err6);
                                                                     throw err6;
                                                                 } else {
                                                                     res.sendStatus(200);

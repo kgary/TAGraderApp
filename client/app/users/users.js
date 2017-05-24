@@ -337,6 +337,8 @@ user.controller('facultyController', function($scope, $http, $location, $route, 
         for (var i = 0; i < $scope.classes.length; i++) {
             if (selectedClass === $scope.classes[i].ScheduleID) {
                 $scope.classTitle = $scope.classes[i].class;
+		// KG added
+		$scope.classScheduleID = $scope.classes[i].ScheduleID;
                 $scope.studentOne = $scope.classes[i].studentOne;
                 $scope.studentTwo = $scope.classes[i].studentTwo;
                 $scope.ta = $scope.classes[i].ta;
