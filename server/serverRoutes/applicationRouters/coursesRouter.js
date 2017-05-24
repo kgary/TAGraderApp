@@ -14,7 +14,7 @@ router.use(function(req, res, next) {
 
 //  Create mysql connection pool
 var mysql_pool  = mysql.createPool({
-    connectionLimit : 100,
+    connectionLimit : 5,
     host            : 'localhost',
     user            : 'root',
     password        : 'root',
