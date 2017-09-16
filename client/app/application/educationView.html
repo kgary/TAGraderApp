@@ -19,7 +19,7 @@
             </div>
             <input ng-model='gpa' type="number" name="gpa" placeholder="GPA*">
         </fieldset>
-    </form> 
+    </form>
     <form>
         <fieldset>
             <legend><span class="number">2</span>Additional Information</legend>
@@ -27,13 +27,14 @@
             <div ng-show="probation===1">
                 <p class="probation" ng-model='probationMessage' style="color:red;">Your application won't be considered until the academic probation has been cleared.</p>
             </div>
-            <input ng-model='fourPlusOne' ng-true-value='1' ng-false-value='0' ng-init='fourPlusOne=0' type="checkbox" name="4to1" value="4to1"/> I'm in the 4 to 1 program<br>
+            <input ng-model='fourPlusOne' ng-true-value='1' ng-false-value='0' ng-init='fourPlusOne=0' type="checkbox" name="4to1" value="4to1"/> I'm in the 4 + 1 program<br>
             <input ng-model='fullTime' ng-true-value='1' ng-false-value='0' ng-init='fullTime=0' type="checkbox" name="ft" value="ft"/> I will be a full-time student for the {{semesterName}} semester<br><br>
             <label>Date You Started At Arizona State University*:</label>
-            <input ng-model='session' type="date" name="date"><br>
+            <!-- <p><input ng-model='session' type="date" name="date" type="text" id="datepicker"></p> -->
+            <input ng-model='session' type="text" name="date" placeholder="mm-dd-yyyy"><br>
             <label>Graduation Date*:</label>
-            <select ng-model="gradDate" ng-options="x for x in gradDates"></select><br> 
-        </fieldset>     
+            <select ng-model="gradDate" ng-options="x for x in gradDates"></select><br>
+        </fieldset>
     </form>
     <form enctype='multipart/form-data'>
         <fieldset>
@@ -49,8 +50,14 @@
                 <label class='myButton' for="trfile" id="inline-label">Choose File</label><br><br>
                 <div ng-show='transcriptUploadErrorMessage' style='color:Red;'>{{transcriptErrorMessage}}<br><br></div>
         </fieldset>
-    </form> 
+    </form>
     <center>{{saveMessage}}</center><br>
     <input type='button' ng-click='uploadIpos(); uploadTranscript(); saveEducation(false)' value="Save"/>
     <input type='button' ng-click='uploadIpos(); uploadTranscript(); saveEducation(true)' value="Save and Continue"/>
 </div>
+<script>
+  $("#datepicker").click(function(){
+    alert("hello");
+    datepicker();
+  });
+</script>

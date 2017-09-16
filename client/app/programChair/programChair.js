@@ -1,7 +1,7 @@
 'use-strict'
 /*
  * programChair.js used to modularize (module) and control (controllers) the Program Chair User (other than homepage)
- * It will control what content is displayed and launching of Program Chair tasks 
+ * It will control what content is displayed and launching of Program Chair tasks
  */
 
 // setup user module
@@ -22,33 +22,33 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                 $scope.showNewGraderOne = true;
                 $scope.showNewGraderTwo = true;
             }
-            var className = { 'class' : SendClassService.getClassNumber() };       
+            var className = { 'class' : SendClassService.getClassNumber() };
             $http.post('/programChair/getClassInfo', className).then(function successCallback(response) {
                 if (response.data[0] != null) {
                     $scope.populateSelectedClassInfo(response)
-                    $scope.populateClassRequirements(response);                 
-                }            
+                    $scope.populateClassRequirements(response);
+                }
                 // Populate Enrollment Section
                 if (response.data[1] != null) {
                     $scope.populateEnrollment(response);
                 } else {
                     $scope.previousEnrollment = response.data[0][0].EnrollmentNumPrev;
-                    $scope.enrollmentDifference = 0 - response.data[0][0].EnrollmentNumPrev; 
-                }          
+                    $scope.enrollmentDifference = 0 - response.data[0][0].EnrollmentNumPrev;
+                }
                 // Populate Assigned Students Section
                 if (response.data[2] != null) {
-                    $scope.populateAssignedStudents(response);   
+                    $scope.populateAssignedStudents(response);
                 } else {
                     $scope.noneAssigned = 'No Students Currently Assigned';
-                    $scope.noAssigned = true;   
-                } 
+                    $scope.noAssigned = true;
+                }
                 // Populate Faculty Requests Section
                 if (response.data[3] != null && (response.data[3][0].Rank1 != null || response.data[3][0].Rank2 != null)) {
                     $scope.populateFacultyRequests(response);
                 } else {
                     $scope.noneRequested = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName + ' has not made any requests'
-                    $scope.noRequested = true;    
-                } 
+                    $scope.noRequested = true;
+                }
             }, function errorCallback(response) {
                 //TODO
             });
@@ -64,10 +64,10 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             var day = response.data[0][0].Days.split("/");
             for (var i = 0; i < day.length; i++) {
                 if (i = day.length - 1) {
-                    dayString += day[i];   
+                    dayString += day[i];
                 } else {
-                    dayString += day[i] + ' ';   
-                }   
+                    dayString += day[i] + ' ';
+                }
             }
             $scope.showSchedule = true;
             $scope.days = dayString;
@@ -75,7 +75,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         }
         else {
             $scope.showSchedule = false;
-        }            
+        }
         $scope.location = response.data[0][0].Location;
         $scope.classStatus = response.data[0][0].AssignedStatus;
         $scope.status = response.data[0][0].AssignedStatus;
@@ -84,7 +84,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
     // Method to populate class requirements section of class summary page
     $scope.populateClassRequirements = function(response) {
         $scope.reqTaHours = response.data[0][0].TARequiredHours;
-        $scope.reqGraderHours = response.data[0][0].GraderRequiredHours; 
+        $scope.reqGraderHours = response.data[0][0].GraderRequiredHours;
     }
 
     // Method to populate enrollment section of class summary page
@@ -107,8 +107,8 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             if (response.data[2][0].TA != null) {
                 $scope.taIdLink = response.data[2][0].TA;
                 $scope.taAssignedHours = response.data[2][0].TAHours;
-                $scope.taStatus = response.data[2][0].TAStatus; 
-                $scope.showTA = true; 
+                $scope.taStatus = response.data[2][0].TAStatus;
+                $scope.showTA = true;
                 $scope.showNewTA = false;
                 var studentID = { 'studentID' : response.data[2][0].TA };
                 $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) {
@@ -118,25 +118,25 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                     $scope.ta = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;
                 }, function errorCallback(response) {
                     //TODO
-                });    
-            } 
+                });
+            }
             // TA 2
             if (response.data[2][0].TATwo != null) {
                 $scope.taTwoIdLink = response.data[2][0].TATwo;
                 $scope.taTwoAssignedHours = response.data[2][0].TATwoHours;
-                $scope.taTwoStatus = response.data[2][0].TATwoStatus; 
-                $scope.showTATwo = true;  
+                $scope.taTwoStatus = response.data[2][0].TATwoStatus;
+                $scope.showTATwo = true;
                 $scope.showNewTATwo = false;
                 var studentID = { 'studentID' : response.data[2][0].TATwo };
                 $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) {
                     var commitHours = sumUpHours(response.data);
-                    $scope.taTwoAvailableHours = response.data[1][0].TimeCommitment - commitHours; 
+                    $scope.taTwoAvailableHours = response.data[1][0].TimeCommitment - commitHours;
                     $scope.taTwoHoursMax = $scope.taTwoAssignedHours + $scope.taTwoAvailableHours;
                     $scope.taTwo = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;
                 }, function errorCallback(response) {
                     //TODO
                 });
-            }          
+            }
             // Grader 1
             if (response.data[2][0].GraderOne != null) {
                 $scope.graderOneIdLink = response.data[2][0].GraderOne;
@@ -145,14 +145,14 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                 $scope.showGraderOne = true;
                 $scope.showNewGraderOne = false;
                 var studentID = { 'studentID' : response.data[2][0].GraderOne };
-                $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) { 
+                $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) {
                     var commitHours = sumUpHours(response.data);
                     $scope.graderOneAvailableHours = response.data[1][0].TimeCommitment - commitHours;
                     $scope.graderOneHoursMax = $scope.graderOneAssignedHours + $scope.graderOneAvailableHours;
-                    $scope.graderOne = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;   
+                    $scope.graderOne = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;
                 }, function errorCallback(response) {
                     //TODO
-                });    
+                });
             }
             // Grader 2
             if (response.data[2][0].GraderTwo != null) {
@@ -162,7 +162,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                 $scope.showGraderTwo = true;
                 $scope.showNewGraderTwo = false;
                 var studentID = { 'studentID' : response.data[2][0].GraderTwo };
-                $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) { 
+                $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) {
                     var commitHours = sumUpHours(response.data);
                     $scope.graderTwoAvailableHours = response.data[1][0].TimeCommitment - commitHours;
                     $scope.graderTwoHoursMax = $scope.graderTwoAssignedHours + $scope.graderTwoAvailableHours;
@@ -174,7 +174,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             if ($scope.showTA && $scope.showTATwo && $scope.showGraderOne && $scope.showGraderTwo) {
                 $scope.noAvailablePositions = true;
                 $scope.noneAvailable = true;
-            }          
+            }
         } else {
             $scope.noneAssigned = 'No Students Currently Assigned';
         }
@@ -192,11 +192,11 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                     hours += data[i][j].GraderOneHours;
                 } else if (data[i][j].GraderTwoHours) {
                     hours += data[i][j].GraderTwoHours;
-                }      
-            } 
+                }
+            }
             if (i === data.length - 1) {
                 return hours;
-            } 
+            }
         }
     }
 
@@ -206,7 +206,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         if (response.data[3][0].Rank1 != null) {
             var studentID = { 'studentID' : response.data[3][0].Rank1 };
             $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) {
-                $scope.requestOne = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;  
+                $scope.requestOne = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;
             }, function errorCallback(response) {
                 //TODO
             });
@@ -216,24 +216,24 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         if (response.data[3][0].Rank2 != null) {
             var studentID = { 'studentID' : response.data[3][0].Rank2 };
             $http.post('/programChair/getStudentNameHours', studentID).then(function successCallback(response) {
-                $scope.requestTwo = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;  
+                $scope.requestTwo = response.data[0][0].FirstName + ' ' + response.data[0][0].LastName;
             }, function errorCallback(response) {
                 //TODO
             });
             $scope.secondChoice = true;
             $scope.requestTwoIdLink = response.data[3][0].Rank2;
-        } 
+        }
     }
 
     // Method to save class stauts in database
     $scope.saveStatus = function() {
         var postData = { 'status' : $scope.status, 'class' : SendClassService.getClassNumber() };
         $http.post('/programChair/updateStatus', postData).then(function successCallback(response) {
-            $scope.classStatus = $scope.status;  
+            $scope.classStatus = $scope.status;
         }, function errorCallback(response) {
             //TODO
         });
-        $scope.cancelStatusUpdate();     
+        $scope.cancelStatusUpdate();
     }
 
     // Method to cancel status change
@@ -242,8 +242,8 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         $scope.disableUpdateStatus = false;
         var element = document.getElementById('spaceforstatus');
         while (element.firstChild) {
-            element.removeChild(element.firstChild);   
-        }       
+            element.removeChild(element.firstChild);
+        }
     }
 
     // Method to save enrollment in database
@@ -259,14 +259,14 @@ programChair.controller('classSummaryController', function($route, $scope, $http
 
             var postData = { 'class' : SendClassService.getClassNumber(), 'enrollment' : enrollmentUpdate };
             $http.post('/programChair/updateEnrollment', postData).then(function successCallback(response) {
-                $scope.enrollmentDifference = enrollmentUpdate - $scope.previousEnrollment;  
+                $scope.enrollmentDifference = enrollmentUpdate - $scope.previousEnrollment;
             }, function errorCallback(response) {
                 //TODO
             });
             $scope.cancelEnrollmentUpdate();
         } else {
             $scope.enrollmentError = true;
-        }        
+        }
     }
 
     // Method to cancel enrollment update
@@ -277,8 +277,8 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         $scope.enrollmentError = false;
         var element = document.getElementById('spaceforenrollment');
         while (element.firstChild) {
-            element.removeChild(element.firstChild);   
-        }       
+            element.removeChild(element.firstChild);
+        }
     }
 
     // Method to save required hours in database
@@ -288,8 +288,8 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             grader = graderHours,
             send = false;
         if (taHours && graderHours) {
-            postData = { 'class' : SendClassService.getClassNumber(), 'taHours' : taHours, 'graderHours' : graderHours }; 
-            send = true;      
+            postData = { 'class' : SendClassService.getClassNumber(), 'taHours' : taHours, 'graderHours' : graderHours };
+            send = true;
         } else if (!taHours && graderHours) {
             postData = { 'class' : SendClassService.getClassNumber(), 'taHours' : $scope.reqTaHours, 'graderHours' : graderHours };
             send = true;
@@ -302,12 +302,12 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         if (send) {
             $http.post('/programChair/updateRequiredHours', postData).then(function successCallback(response) {
                 $scope.reqTaHours = response.data[0];
-                $scope.reqGraderHours = response.data[1];  
+                $scope.reqGraderHours = response.data[1];
             }, function errorCallback(response) {
                 //TODO
             });
-            $scope.cancelRequiredHoursUpdate();    
-        }       
+            $scope.cancelRequiredHoursUpdate();
+        }
     }
 
     // Method to cancel required hours update
@@ -319,8 +319,8 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         $scope.requiredHoursError = false;
         var element = document.getElementById('spaceforrequiredhours');
         while (element.firstChild) {
-            element.removeChild(element.firstChild);   
-        }       
+            element.removeChild(element.firstChild);
+        }
     }
 
     // Method to update available hours when assigned hours changes
@@ -331,28 +331,28 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                 $scope.taAvailableHours = $scope.taHoursMax - $scope.taAssignedHours;
             } else {
                 $scope.taAvailableHours = $scope.taHoursMax - $scope.taAssignedHours;
-            }             
+            }
         } else if (student === 1) {
             if (!$scope.taTwoAssignedHours && $scope.taTwoAssignedHours != 0) {
                 $scope.taTwoAssignedHours = $scope.taTwoHoursMax;
                 $scope.taTwoAvailableHours = $scope.taTwoHoursMax - $scope.taTwoAssignedHours;
             } else {
                 $scope.taTwoAvailableHours = $scope.taTwoHoursMax - $scope.taTwoAssignedHours;
-            }          
+            }
         } else if (student === 2) {
             if (!$scope.graderOneAssignedHours && $scope.graderOneAssignedHours != 0) {
                 $scope.graderOneAssignedHours = $scope.graderOneHoursMax;
                 $scope.graderOneAvailableHours = $scope.graderOneHoursMax - $scope.graderOneAssignedHours;
             } else {
                 $scope.graderOneAvailableHours = $scope.graderOneHoursMax - $scope.graderOneAssignedHours;
-            }       
+            }
         } else if (student === 3) {
             if (!$scope.graderTwoAssignedHours && $scope.graderTwoAssignedHours != 0) {
                 $scope.graderTwoAssignedHours = $scope.graderTwoHoursMax;
                 $scope.graderTwoAvailableHours = $scope.graderTwoHoursMax - $scope.graderTwoAssignedHours;
             } else {
                 $scope.graderTwoAvailableHours = $scope.graderTwoHoursMax - $scope.graderTwoAssignedHours;
-            }    
+            }
         } else {
             if (!student.assignHours && student.assignHours != 0) {
                 student.assignHours = student.maxHours;
@@ -388,7 +388,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         if ((!taAssignedHours || taAssignedHours === 0) && (!taTwoAssignedHours || taTwoAssignedHours === 0) && (!graderOneAssignedHours || graderOneAssignedHours === 0) && (!graderTwoAssignedHours || graderTwoAssignedHours === 0)) {
             var postData = { 'deleteClass' : SendClassService.getClassNumber()};
         } else {
-            var postData = { 'class' : SendClassService.getClassNumber(), 'ta' : ta, 'taAssignedHours' : taAssignedHours, 'taStatus' : taStatus, 'taTwo' : taTwo, 'taTwoAssignedHours' : taTwoAssignedHours, 'taTwoStatus' : taTwoStatus, 'graderOne' : graderOne, 'graderOneAssignedHours' : graderOneAssignedHours, 'graderOneStatus' : graderOneStatus, 'graderTwo' : graderTwo, 'graderTwoAssignedHours' : graderTwoAssignedHours, 'graderTwoStatus' : graderTwoStatus };   
+            var postData = { 'class' : SendClassService.getClassNumber(), 'ta' : ta, 'taAssignedHours' : taAssignedHours, 'taStatus' : taStatus, 'taTwo' : taTwo, 'taTwoAssignedHours' : taTwoAssignedHours, 'taTwoStatus' : taTwoStatus, 'graderOne' : graderOne, 'graderOneAssignedHours' : graderOneAssignedHours, 'graderOneStatus' : graderOneStatus, 'graderTwo' : graderTwo, 'graderTwoAssignedHours' : graderTwoAssignedHours, 'graderTwoStatus' : graderTwoStatus };
         }
         $http.post('/programChair/updateAssignedStudents', postData).then(function successCallback(response) {
             $scope.cancelUpdatedAssignments();
@@ -410,11 +410,11 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                 } else {
                     break;
                 }
-            } 
+            }
             if (h === $scope.studentsToAssignInfo.length - 1 || $scope.studentsToAssignInfo.length === 1) {
                 checkForNull();
-            }  
-        }        
+            }
+        }
     }
 
     function checkForNull() {
@@ -422,7 +422,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             if ($scope.studentsToAssignInfo[h].position === null || $scope.studentsToAssignInfo[h].assignHours === 0 || $scope.studentsToAssignInfo[h].assignedStatus === null) {
                 $scope.studentsToAssignInfo.splice(h, 1);
                 checkForNull();
-            } 
+            }
             if (h === $scope.studentsToAssignInfo.length - 1 || $scope.studentsToAssignInfo.length === 1) {
                 if (!checkDuplicatePositions()) {
                     for (var i = 0; i < $scope.studentsToAssignInfo.length; i++) {
@@ -430,10 +430,10 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                             var postData = {'class' : SendClassService.getClassNumber(), 'position' : $scope.studentsToAssignInfo[i].position, 'assignHours' : $scope.studentsToAssignInfo[i].assignHours, 'assignedStatus' : $scope.studentsToAssignInfo[i].assignedStatus, 'ASURITE_ID' : $scope.studentsToAssignInfo[i].ASURITE_ID};
                             gatherAll(postData);
                         }
-                    } 
+                    }
                 }
             }
-        } 
+        }
     }
 
     function gatherAll(postData) {
@@ -472,7 +472,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
 
     // Method to cancel updating student assignments
     $scope.cancelUpdatedAssignments = function() {
-        var className = { 'class' : SendClassService.getClassNumber() };       
+        var className = { 'class' : SendClassService.getClassNumber() };
         $http.post('/programChair/getClassInfo', className).then(function successCallback(response) {
             $scope.showTA = false;
             $scope.showTATwo = false;
@@ -487,9 +487,9 @@ programChair.controller('classSummaryController', function($route, $scope, $http
 
     // Method to cancel saving new students
     $scope.cancelNewAssignments = function() {
-        SendStudentService.clearStudentsToAssign(); 
-        $scope.assignNewStudents = false; 
-        $scope.addStudentError = false; 
+        SendStudentService.clearStudentsToAssign();
+        $scope.assignNewStudents = false;
+        $scope.addStudentError = false;
         $scope.studentsToAssignInfo = [];
         studentsToAssign = [];
     }
@@ -557,23 +557,23 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             $http.post('/programChair/updateAssignedStudents', postData).then(function successCallback(response) {
                 if ($scope.showTA === false && $scope.showTATwo === false && $scope.showGraderOne === false && $scope.showGraderTwo === false) {
                     $scope.noneAssigned = 'No Students Currently Assigned';
-                    $scope.noAssigned = true;  
+                    $scope.noAssigned = true;
                 }
                 updateHoursAfterDelete(studentDeleted, studentDeletedHours);
                 $scope.noAvailablePositions = false;
                 $scope.noneAvailable = false;
                 $scope.cancelUpdatedAssignments();
             }, function errorCallback(response) {
-                //TODO     
+                //TODO
             });
-        }   
+        }
     }
 
     function updateHoursAfterDelete(student, hours) {
         for (var i = 0; i < $scope.studentsToAssignInfo.length; i++) {
             if (student === $scope.studentsToAssignInfo[i].ASURITE_ID) {
                 $scope.studentsToAssignInfo[i].availableHours = hours;
-                $scope.studentsToAssignInfo[i].maxHours += hours;  
+                $scope.studentsToAssignInfo[i].maxHours += hours;
             }
         }
     }
@@ -587,7 +587,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                 }
             }
             if ($scope.studentsToAssignInfo.length === 0) {
-                $scope.cancelNewAssignments();    
+                $scope.cancelNewAssignments();
             }
         }
     }
@@ -619,7 +619,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                                 studentsToAssign.push(student);
                                 getStudentsNameHours();
                             }
-                        }   
+                        }
                     }
                 }
             }
@@ -655,19 +655,19 @@ programChair.controller('classSummaryController', function($route, $scope, $http
         $location.path('/viewApplicationsPC');
     }
 
-    $scope.getStudentsToAssign = function() {   
+    $scope.getStudentsToAssign = function() {
         for (var i = 0; i < $scope.names.length; i++) {
             if ($scope.names[i].selected === 1) {
                 studentsToAssign.push($scope.names[i].ASURITE_ID)
             }
             if (i === $scope.names.length - 1) {
                 if (studentsToAssign.length > 0) {
-                    SendClassService.setAssignStudentRoute(true) 
-                } 
-                getStudentsNameHours();  
+                    SendClassService.setAssignStudentRoute(true)
+                }
+                getStudentsNameHours();
             }
-        } 
-    } 
+        }
+    }
 
     function getStudentsNameHours() {
         for (var i = 0; i < studentsToAssign.length; i++) {
@@ -681,12 +681,12 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                     'assignHours' : 0,
                     'availableHours' : response.data[1][0].TimeCommitment - commitHours,
                     'maxHours' : response.data[1][0].TimeCommitment - commitHours,
-                    'assignStatus' : null}; 
+                    'assignStatus' : null};
                 saveStudentInfo(student);
             }, function errorCallback(response) {
                 //TODO
             });
-        }   
+        }
     }
 
     function saveStudentInfo(student) {
@@ -698,16 +698,16 @@ programChair.controller('classSummaryController', function($route, $scope, $http
                     SendStudentService.setStudentsToAssign($scope.studentsToAssignInfo);
                     if (SendClassService.getAssignStudentRoute() === 'true') {
                         $scope.goToClassSummary('newStudents');
-                        $scope.selectStudent = false;   
+                        $scope.selectStudent = false;
                     } else {
                         if (showAssignNewStudents()) {
                             $scope.studentsToAssignInfo = SendStudentService.getStudentsToAssign();
                             $scope.assignNewStudents = true;
                         }
-                    }    
+                    }
                 }
             }
-        } 
+        }
     }
 
     $scope.goToClassSummary= function(id) {
@@ -720,7 +720,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
     }
 
     function showAssignNewStudents() {
-        if (SendStudentService.getStudentsToAssign()) {    
+        if (SendStudentService.getStudentsToAssign()) {
             return true;
         } else {
             return false;
@@ -730,7 +730,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
 
 programChair.controller('pcEditScheduleController', function($scope, $http, $location, $route, UserInfoService, UserAuthService, SendClassService) {
     $scope.classes = [];
-    
+
     angular.element(document).ready(function() {
         $http.get('/programChair/getClassNames').then(function successCallback(response) {
            if (response.data[0].ScheduleID) {
@@ -748,12 +748,12 @@ programChair.controller('pcEditScheduleController', function($scope, $http, $loc
            }
         }, function errorCallback(response) {
             //TODO
-        });  
-    }); 
+        });
+    });
 
     $scope.editInfo = function(selectedClass) {
-        $scope.courseSelected = true;  
-        var className = { 'class' : selectedClass.courseNumber };       
+        $scope.courseSelected = true;
+        var className = { 'class' : selectedClass.courseNumber };
         $http.post('/programChair/getClassInfo', className).then(function successCallback(response) {
             $scope.session = response.data[0][0].SessionIs;
             $scope.location = response.data[0][0].Location;
@@ -795,17 +795,17 @@ programChair.controller('pcEditScheduleController', function($scope, $http, $loc
         var options = [];
         for (var i in data) {
             if (data[i].Location === 'ASUOnline') {
-                var className = data[i].Subject + ' ' + data[i].CatalogNumber + '*';   
+                var className = data[i].Subject + ' ' + data[i].CatalogNumber + '*';
             } else {
-                var className = data[i].Subject + ' ' + data[i].CatalogNumber;    
+                var className = data[i].Subject + ' ' + data[i].CatalogNumber;
             }
             options.push({'class': className,'courseNumber': data[i].CourseNumber});
-        } 
+        }
         return options;
     }
 
-    $scope.name = UserInfoService.getFullName();   
-    
+    $scope.name = UserInfoService.getFullName();
+
     $scope.logout = function() {
         UserInfoService.clearUserSession();
         $location.path('/login');
@@ -818,21 +818,21 @@ programChair.controller('pcEditScheduleController', function($scope, $http, $loc
     $scope.goHome = function() {
         $location.path('/programChairHome');
     }
-    
+
     $scope.displayHome = function() {
         if (UserAuthService.isAuthenticated()) {
             return true;
         }
-    } 
+    }
 });
 
 programChair.controller('programChairEvalController', function($scope, $http, $location, $route, UserInfoService, UserAuthService, SendClassService) {
     angular.element(document).ready(function() {
-        SendClassService.setAssignStudentRoute(false);  
+        SendClassService.setAssignStudentRoute(false);
     });
-    // populates the Student Evaluation dropdown   
-    $scope.ratings = ['1','2','3','4','5'];  
-    
+    // populates the Student Evaluation dropdown
+    $scope.ratings = ['1','2','3','4','5'];
+
     // populates students names in dropdown
     $http.get('/programChair/evaluations/appnames').then(function successCallback(response) {
         if(response.data == 'OK') {
@@ -843,7 +843,7 @@ programChair.controller('programChairEvalController', function($scope, $http, $l
     }, function errorCallback(response) {
             //TODO
     });
-    
+
     // Saves Student Evaluation into Database
     $scope.saveEval = function(doRoute) {
         var dateObj = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -862,14 +862,14 @@ programChair.controller('programChairEvalController', function($scope, $http, $l
             };
         $http.post('/programChair/evaluationsPC', studentEvalData).then(function successCallback(response) {
             if (doRoute === true) {
-                $location.path('/programChairHome'); 
+                $location.path('/programChairHome');
             }
         }, function errorCallback(response) {
             //TODO
         });
     }
     $scope.name = UserInfoService.getFullName();
-    
+
     $scope.logout = function() {
         UserInfoService.clearUserSession();
         $location.path('/login');
@@ -882,7 +882,7 @@ programChair.controller('programChairEvalController', function($scope, $http, $l
     $scope.goHome = function() {
         $location.path('/programChairHome');
     }
-    
+
     $scope.displayHome = function() {
         if (UserAuthService.isAuthenticated()) {
             return true;
@@ -907,7 +907,7 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
         $scope.goHome = function() {
             $location.path('/programChairHome');
         }
-        
+
         $scope.displayHome = function() {
             if (UserAuthService.isAuthenticated()) {
                 return true;
@@ -956,55 +956,56 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
             courseData = {
                 course : classString
             };
-            $http.post('/programChair/applications', courseData).then(function successCallback(response) { 
+            $http.post('/programChair/applications', courseData).then(function successCallback(response) {
                 if (!response.data[0].Name) {
-                    $scope.search = false; 
+                    $scope.search = false;
                     $scope.noSearch = true;
-                    $scope.noStudents = true;   
+                    $scope.noStudents = true;
                 } else {
                     $scope.search = true;
                     $scope.noSearch = true;
-                    $scope.noStudents = false; 
+                    $scope.noStudents = false;
                     $scope.names = response.data;
                     for (var i = 0; i <$scope.names.length; i++) {
                         if ($scope.names[i].isFullTime === 1) {
                             $scope.names[i].isFullTime = 'Yes';
                         } else {
                             $scope.names[i].isFullTime = 'No';
-                        }   
+                        }
                     }
-                }  
+                }
             }, function errorCallback(response) {
                 //TODO
-            }); 
+            });
         } else {
             if ($scope.selectCourse) {
                 courseData = {
                     course : $scope.selectCourse.CourseSection
-                };  
-                $http.post('/programChair/applications', courseData).then(function successCallback(response) { 
+                };
+                $http.post('/programChair/applications', courseData).then(function successCallback(response) {
                     if (!response.data[0].Name) {
-                        $scope.search = false; 
-                        $scope.noSearch = true; 
-                        $scope.noStudents = true;   
+                        $scope.search = false;
+                        $scope.noSearch = true;
+                        $scope.noStudents = true;
                     } else {
                         $scope.search = true;
                         $scope.noSearch = true;
-                        $scope.noStudents = false; 
+                        $scope.noStudents = false;
                         $scope.names = response.data;
+                        alert($scope.names[i].isFullTime);
                         for (var i = 0; i <$scope.names.length; i++) {
                             if ($scope.names[i].isFullTime === 1) {
                                 $scope.names[i].isFullTime = 'Yes';
                             } else {
                                 $scope.names[i].isFullTime = 'No';
-                            }   
+                            }
                         }
                     }
                 }, function errorCallback(response) {
                     //TODO
-                });   
-            }     
-        } 
+                });
+            }
+        }
     }
 
     $scope.filter = function(filter) {
@@ -1016,13 +1017,13 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
                 courseData = {
                     course : $scope.selectCourse.CourseSection,
                     filter : filter
-                };     
+                };
             } else {
                 courseData = {
                     course : $scope.pcSelectCourse,
                     filter : filter
                 };
-            } 
+            }
             $http.post('/programChair/applications', courseData).then(function successCallback(response) {
                 $scope.names = response.data;
                 for (var i = 0; i <$scope.names.length; i++) {
@@ -1030,11 +1031,11 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
                         $scope.names[i].isFullTime = 'Yes';
                     } else {
                         $scope.names[i].isFullTime = 'No';
-                    }   
+                    }
                 }
             }, function errorCallback(response) {
                 //TODO
-            });   
+            });
         }
     }
 
@@ -1190,18 +1191,18 @@ programChair.controller('programChairStudentInfoController', function($scope, $r
     }, function errorCallback(response) {
         //TODO
     });
-    // saves PC or removes feedback 
+    // saves PC or removes feedback
     $scope.saveFeedback = function(saveNew) {
         if (saveNew) {
             if ($scope.feedbackText === '' || $scope.feedbackText === null) {
                 $scope.feedbackSaveMessage = 'Feedback is empty so nothing was saved!';
-                $timeout(function() { 
+                $timeout(function() {
                         $scope.feedbackSaveMessage = '';
                 }, 1500)
             } else {
-                $http.post('/programChair/saveFeedback', {appID:studentAppID, feedback:$scope.feedbackText, hasComplied:$scope.hasComplied}).then(function successCallback(response) {       
+                $http.post('/programChair/saveFeedback', {appID:studentAppID, feedback:$scope.feedbackText, hasComplied:$scope.hasComplied}).then(function successCallback(response) {
                     $scope.feedbackSaveMessage = 'Successfully saved feedback!';
-                    $timeout(function() { 
+                    $timeout(function() {
                         $scope.feedbackSaveMessage = '';
                     }, 1500);
                 }, function errorCallback(response) {
@@ -1209,11 +1210,11 @@ programChair.controller('programChairStudentInfoController', function($scope, $r
                 });
             }
         } else {
-            $http.post('/programChair/removeFeedback', {appID:studentAppID}).then(function successCallback(response) { 
+            $http.post('/programChair/removeFeedback', {appID:studentAppID}).then(function successCallback(response) {
                 $scope.feedbackText = null;
                 $scope.hasComplied = 0;
                 $scope.feedbackSaveMessage = 'Successfully removed feedback!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.feedbackSaveMessage = '';
                 }, 1500);
             }, function errorCallback(response) {
@@ -1235,7 +1236,7 @@ programChair.controller('programChairStudentInfoController', function($scope, $r
     $scope.goHome = function() {
         $location.path('/programChairHome');
     }
-    
+
     $scope.displayHome = function() {
         if (UserAuthService.isAuthenticated()) {
             return true;
@@ -1245,7 +1246,7 @@ programChair.controller('programChairStudentInfoController', function($scope, $r
 
 programChair.controller('programChairChangePasswordController', function($scope, $http, $location, $route, UserInfoService, UserAuthService, SendClassService) {
     angular.element(document).ready(function() {
-        SendClassService.setAssignStudentRoute(false);  
+        SendClassService.setAssignStudentRoute(false);
     });
 
     $scope.changePassword = function(changeOther) {
@@ -1287,7 +1288,7 @@ programChair.controller('programChairChangePasswordController', function($scope,
                     $scope.defaultPassword = 0;
                     $scope.passwordError = true;
                     $scope.defaultPassword = 0;
-                    $scope.passwordErrorMessage = 'User does not exist';               
+                    $scope.passwordErrorMessage = 'User does not exist';
                 } else if(response.data.error === 2) {
                     $scope.newPasswordOne = '';
                     $scope.newPasswordTwo = '';
@@ -1303,8 +1304,8 @@ programChair.controller('programChairChangePasswordController', function($scope,
                     $scope.changeOther = 0;
                     $scope.passwordError = false;
                     $scope.passwordSuccess = true;
-                    $scope.passwordSuccessMessage = 'User password updated successfully';   
-                }     
+                    $scope.passwordSuccessMessage = 'User password updated successfully';
+                }
             }, function errorCallback(response) {
                 //TODO
             });
@@ -1314,13 +1315,13 @@ programChair.controller('programChairChangePasswordController', function($scope,
     $scope.setDefaultPassword = function() {
         if ($scope.defaultPassword) {
             $scope.newPasswordOne = '1!Aaaaaa';
-            $scope.newPasswordTwo = '1!Aaaaaa';   
+            $scope.newPasswordTwo = '1!Aaaaaa';
         } else {
             $scope.newPasswordOne = null;
-            $scope.newPasswordTwo = null;      
+            $scope.newPasswordTwo = null;
         }
     }
-    
+
     function checkPassword(password) {
         var requirement = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,20}$");
         var res = requirement.test(password);
@@ -1340,7 +1341,7 @@ programChair.controller('programChairChangePasswordController', function($scope,
     $scope.goHome = function() {
         $location.path('/programChairHome');
     }
-    
+
     $scope.displayHome = function() {
         if (UserAuthService.isAuthenticated()) {
             return true;
@@ -1350,7 +1351,7 @@ programChair.controller('programChairChangePasswordController', function($scope,
 
 programChair.controller('programChairCoursesController', function($scope, $routeParams, $http, $location, UserInfoService, UserAuthService, SendClassService) {
     angular.element(document).ready(function() {
-        SendClassService.setAssignStudentRoute(false);  
+        SendClassService.setAssignStudentRoute(false);
     });
 
     $scope.name = UserInfoService.getFullName();
@@ -1383,7 +1384,7 @@ programChair.controller('programChairCoursesController', function($scope, $route
                 //TODO
             });
         });
-    }  
+    }
     // add courses
     $scope.addCourse = function(courseAddSection, courseAddName) {
         var courseAddData = {
@@ -1417,7 +1418,7 @@ programChair.controller('programChairCoursesController', function($scope, $route
     $scope.goHome = function() {
         $location.path('/programChairHome');
     }
-    
+
     $scope.displayHome = function() {
         if (UserAuthService.isAuthenticated()) {
             return true;
@@ -1426,8 +1427,8 @@ programChair.controller('programChairCoursesController', function($scope, $route
 });
 
 programChair.controller('programChairUpdateAllEnrollmentsController', function($scope, $http, $location, $route, UserInfoService, SendClassService) {
-    angular.element(document).ready(function() { 
-        SendClassService.setAssignStudentRoute(false);       
+    angular.element(document).ready(function() {
+        SendClassService.setAssignStudentRoute(false);
         $http.get('/programChair/getClassNames').then(function successCallback(response) {
             if (response.data[0].ScheduleID) {
                 $scope.classes = setClassOptions(response.data);
@@ -1445,12 +1446,12 @@ programChair.controller('programChairUpdateAllEnrollmentsController', function($
             var options = [];
             for (var i in data) {
                 if (data[i].Location === 'ASUOnline') {
-                    var className = data[i].Subject + ' ' + data[i].CatalogNumber + '*';   
+                    var className = data[i].Subject + ' ' + data[i].CatalogNumber + '*';
                 } else {
-                    var className = data[i].Subject + ' ' + data[i].CatalogNumber;    
+                    var className = data[i].Subject + ' ' + data[i].CatalogNumber;
                 }
                 options.push({'class': className,'courseNumber': data[i].CourseNumber, 'enrollment': null});
-            } 
+            }
             return options;
         }
     });
@@ -1460,11 +1461,11 @@ programChair.controller('programChairUpdateAllEnrollmentsController', function($
             if ($scope.classes[i].enrollment != null && $scope.classes[i].enrollment != 0) {
                 var postData = { 'class' : $scope.classes[i].courseNumber, 'enrollment' : $scope.classes[i].enrollment };
                 $http.post('/programChair/updateEnrollment', postData).then(function successCallback(response) {
-                    $location.path('/programChairHome');  
+                    $location.path('/programChairHome');
                 }, function errorCallback(response) {
                     //TODO
                 });
-            }   
+            }
         }
     }
 });

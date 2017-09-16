@@ -16,9 +16,9 @@ application.controller('contactInfoController', function($scope, $location, $htt
         UserInfoService.clearUserSession();
         $location.path('/login');
     }
-    // populates the Contact Info page        
+    // populates the Contact Info page
     angular.element(document).ready(function() {
-        $http.get('/contactInfo').then(function successCallback(response) {           
+        $http.get('/contactInfo').then(function successCallback(response) {
             $scope.phoneNumber = response.data.PhoneNumber;
             $scope.mobileNumber = response.data.MobileNumber;
             $scope.country = response.data.AddressCountry;
@@ -28,11 +28,11 @@ application.controller('contactInfoController', function($scope, $location, $htt
             }
             $scope.city = response.data.AddressCity;
             $scope.state = response.data.AddressState;
-            $scope.zip = response.data.AddressZip;  
-            $scope.name = UserInfoService.getFullName();      
+            $scope.zip = response.data.AddressZip;
+            $scope.name = UserInfoService.getFullName();
         }, function errorCallback(response) {
             //TODO
-        });   
+        });
     });
     // Saves Contact Information into Database
     $scope.saveContact = function(doRoute) {
@@ -55,10 +55,10 @@ application.controller('contactInfoController', function($scope, $location, $htt
             };
         $http.post('/contactInfo', contactInfoData).then(function successCallback(response) {
             if (doRoute === true) {
-                $location.path('/education'); 
+                $location.path('/education');
             } else {
                 $scope.saveMessage = 'Save Successful!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.saveMessage = '';
                 }, 1500);
             }
@@ -94,16 +94,16 @@ application.controller('educationInfoController', function($scope, $location, $h
         $scope.gradDates.push("Spring " + (year + (i + 1)));
         $scope.gradDates.push("Summer " + (year + (i + 1)));
     }
-    
-    // populates the Education page        
-    angular.element(document).ready(function() {    
+
+    // populates the Education page
+    angular.element(document).ready(function() {
         $http.get('programChair/getDeadline').then(function successCallback(response) {
             var year = new Date(response.data.date).getFullYear();
             $scope.semesterName = response.data.semester;
         }, function errorCallback(response) {
             // empty
-        });    
-        $http.get('/education').then(function successCallback(response) { 
+        });
+        $http.get('/education').then(function successCallback(response) {
             $scope.selectedDegree = response.data.EducationLevel;
             $scope.gpa = response.data.GPA;
             $scope.otherDegree = response.data.DegreeProgram;
@@ -111,8 +111,8 @@ application.controller('educationInfoController', function($scope, $location, $h
             $scope.fourPlusOne = response.data.isFourPlusOne;
             $scope.fullTime = response.data.isFullTime;
             if (response.data.FirstSession != null) {
-                $scope.session = new Date(response.data.FirstSession);    
-            } 
+                $scope.session = new Date(response.data.FirstSession);
+            }
             $scope.gradDate = response.data.GraduationDatel;
             $scope.iposInput = response.data.ipos;
             $scope.transcriptInput = response.data.transcript;
@@ -120,20 +120,21 @@ application.controller('educationInfoController', function($scope, $location, $h
             //TODO
         });
     });
-    
+
     // saves data and posts - routes if the user chose to continue
     $scope.saveEducation = function(doRoute) {
         var pageStatus = PageCompletionService.checkFields($scope, 'education');
         var requiredFields = [];
         var dateObj = new Date().toISOString().slice(0, 19).replace('T', ' ');
         var fSession;
-        
-        if (!$scope.session) {
-            fSession = null;   
-        } else {
-            fSession = new Date($scope.session).toISOString().slice(0, 19).replace('T', ' ')
-        }
 
+        if (!$scope.session) {
+            fSession = null;
+        } else {
+          var date = $scope.session.split("-");
+          var dateObject = new Date(date[2], date[1] - 1, date[0]);
+          fSession = dateObject.toISOString().slice(0, 19).replace('T', ' ');
+        }
         var educationData = {
                 EducationLevel            : $scope.selectedDegree,
                 GPA                       : $scope.gpa,
@@ -148,17 +149,17 @@ application.controller('educationInfoController', function($scope, $location, $h
                 ModifiedDate              : dateObj,
                 ASURITE_ID                : UserInfoService.getUserId()
             };
-        
+
         $http.post('/education', educationData).then(function successCallback(response) {
             if (doRoute === true && ($scope.iposUploadErrorMessage === true || $scope.transcriptUploadErrorMessage === true)) {
                 if (confirm("One or More Files Failed to Upload. Continue Anyways?") == true) {
                     $location.path('/employment');
-                } 
+                }
             } else if (doRoute === true) {
                 $location.path('/employment');
             } else {
                 $scope.saveMessage = 'Save Successful!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.saveMessage = '';
                 }, 1500);
             }
@@ -171,16 +172,16 @@ application.controller('educationInfoController', function($scope, $location, $h
         if (file[0]) {
             $scope.iposInput = file[0].name;
             $scope.iposUploadErrorMessage = false;
-            $scope.$apply();   
-        }  
+            $scope.$apply();
+        }
     }
 
     $scope.transcriptFileNameChanged = function(file) {
         if (file[0]) {
             $scope.transcriptInput = file[0].name;
             $scope.transcriptUploadErrorMessage = false;
-            $scope.$apply();   
-        }  
+            $scope.$apply();
+        }
     }
 
     $scope.uploadIpos = function() {
@@ -198,13 +199,13 @@ application.controller('educationInfoController', function($scope, $location, $h
                     $scope.iposFile = null;
                 }, function errorCallback(response) {
                     //TODO
-                });   
+                });
             } else {
                 $scope.iposFile = null;
                 $scope.iposErrorMessage = 'Upload Failed. PDF Files only. Please Select a Different File';
                 $scope.iposUploadErrorMessage = true;
-            }    
-        }    
+            }
+        }
     };
 
     $scope.uploadTranscript = function() {
@@ -222,17 +223,17 @@ application.controller('educationInfoController', function($scope, $location, $h
                     $scope.tranFile = null;
                 }, function errorCallback(response) {
                     //TODO
-                }); 
+                });
             } else {
                 $scope.tranFile = null;
                 $scope.transcriptErrorMessage = 'Upload Failed. PDF Files only. Please Select a Different File';
                 $scope.transcriptUploadErrorMessage = true;
-            }    
-        } 
+            }
+        }
     };
 });
 
-application.controller('employmentInfoController', function($scope, $location, $http, $timeout, UserInfoService, WorkHoursCheckService, PageCompletionService, AppStatusService) {  
+application.controller('employmentInfoController', function($scope, $location, $http, $timeout, UserInfoService, WorkHoursCheckService, PageCompletionService, AppStatusService) {
     $scope.logout = function() {
         UserInfoService.clearUserSession();
         $location.path('/login');
@@ -242,7 +243,7 @@ application.controller('employmentInfoController', function($scope, $location, $
         $scope.hoursWarning = result.isOver;
         $scope.enteredHours = result.hours;
     }
-    
+
     angular.element(document).ready(function(){
         $http.get('/employment', user ).then(function successCallback(response) {
             $scope.hours = response.data.TimeCommitment + ' hours per week';
@@ -258,7 +259,7 @@ application.controller('employmentInfoController', function($scope, $location, $
             //TODO
         });
     });
-    
+
     // saves data and posts - routes if the user chose to continue
     $scope.saveEmployment = function(doRoute) {
         var pageStatus = PageCompletionService.checkFields($scope, 'employment');
@@ -267,7 +268,7 @@ application.controller('employmentInfoController', function($scope, $location, $
         if ($scope.hours === 'null hours per week') {
             hoursParse = null;
         } else {
-            hoursParse = parseInt($scope.hours.substr(0, $scope.hours.indexOf(' ')));    
+            hoursParse = parseInt($scope.hours.substr(0, $scope.hours.indexOf(' ')));
         }
         if ($scope.international === 0) {
             $scope.speakTest = null;
@@ -286,17 +287,17 @@ application.controller('employmentInfoController', function($scope, $location, $
                 ModifiedDate              : dateObj,
                 ASURITE_ID                : UserInfoService.getUserId()
             };
-        
+
         $http.post('/employment', employmentData).then(function successCallback(response) {
             if (doRoute === true && $scope.resumeUploadErrorMessage === true) {
                 if (confirm("One or More Files Failed to Upload. Continue Anyways?") == true) {
                     $location.path('/availability');
-                } 
+                }
             } else if (doRoute === true) {
                 $location.path('/availability');
             } else {
                 $scope.saveMessage = 'Save Successful!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.saveMessage = '';
                 }, 1500);
             }
@@ -309,8 +310,8 @@ application.controller('employmentInfoController', function($scope, $location, $
         if (file[0]) {
             $scope.resumeInput = file[0].name;
             $scope.resumeUploadErrorMessage = false;
-            $scope.$apply();   
-        } 
+            $scope.$apply();
+        }
     }
 
     $scope.uploadResume = function() {
@@ -332,8 +333,8 @@ application.controller('employmentInfoController', function($scope, $location, $
             } else {
                 $scope.resumeFile = null;
                 $scope.resumeErrorMessage = 'Upload Failed. PDF Files only. Please Select a Different File';
-                $scope.resumeUploadErrorMessage = true; 
-            }     
+                $scope.resumeUploadErrorMessage = true;
+            }
         }
     };
 });
@@ -350,12 +351,12 @@ application.controller('availabilityInfoController', function($scope, $location,
         {'startHour':'2:00 PM','stopHour':'4:00 PM'},
         {'startHour':'4:00 PM','stopHour':'6:00 PM'},
         {'startHour':'6:00 PM','stopHour':'8:00 PM'}];
-        
+
     $scope.days = ['Monday',
                    'Tuesday',
                    'Wednesday',
                    'Thursday',
-                   'Friday'];    
+                   'Friday'];
 
     // saves data and posts - routes if the user chose to continue
     $scope.saveAvailability = function(doRoute) {
@@ -364,34 +365,34 @@ application.controller('availabilityInfoController', function($scope, $location,
         var user2 = { 'user' : UserInfoService.getUserId(), isAvailabilityComplete:0 };
         $scope.processAvailability(user, availableSlots);
         if (availableSlots.length > 0) {
-            var data = {availableSlots:availableSlots, isAvailabilityComplete:1, appStatus:AppStatusService.checkStatus('availability', 1)};           
+            var data = {availableSlots:availableSlots, isAvailabilityComplete:1, appStatus:AppStatusService.checkStatus('availability', 1)};
             $http.post('/availability', data).then(function successCallback(response) {
                 if (doRoute === true) {
-                    $location.path('/languages'); 
+                    $location.path('/languages');
                 } else {
                 $scope.saveMessage = 'Save Successful!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.saveMessage = '';
                 }, 1500);
             }
             }, function errorCallback(response) {
                 //TODO
-            });     
+            });
         } else {
             user2.appStatus = AppStatusService.checkStatus('availability', 0);
             $http.post('/availability', user2).then(function successCallback(response) {
                 if (doRoute === true) {
-                    $location.path('/languages'); 
+                    $location.path('/languages');
                 } else {
                     $scope.saveMessage = 'Save Successful!';
-                    $timeout(function() { 
+                    $timeout(function() {
                         $scope.saveMessage = '';
                     }, 1500);
                 }
             }, function errorCallback(response) {
                 //TODO
-            }); 
-        } 
+            });
+        }
     }
 
     // saves all checked values
@@ -417,13 +418,13 @@ application.controller('availabilityInfoController', function($scope, $location,
         if (hours === '12') {
             hours = '00';
         }
-          
+
         if (modifier === 'PM') {
             hours = parseInt(hours, 10) + 12;
         }
         return hours + ':' + minutes + ':' + '00';
-    }   
-    
+    }
+
     // unchecks all boxes
     $scope.resetAll = function() {
         for (var x = 0; x < 5; x++) {
@@ -432,8 +433,8 @@ application.controller('availabilityInfoController', function($scope, $location,
                 document.getElementsByName(day)[i].checked = false;
             }
         }
-    } 
-    
+    }
+
     // checks all boxes
     $scope.checkAll = function() {
         for (var x = 0; x < 5; x++) {
@@ -443,20 +444,20 @@ application.controller('availabilityInfoController', function($scope, $location,
             }
         }
     }
-    
-    // when page loads, runs setPreviousSchedule which poplulates fiels with 
+
+    // when page loads, runs setPreviousSchedule which poplulates fiels with
     // previously saved data
-    angular.element(document).ready(function(){       
+    angular.element(document).ready(function(){
         // displays the current semester and year for which the student is applying. comes from PC-set deadline
         $http.get('programChair/getDeadline').then(function successCallback(response) {
             var year = new Date(response.data.date).getFullYear();
             $scope.semesterName = response.data.semester + ' ' + year;
         }, function errorCallback(response) {
             // empty
-        });  
+        });
         $scope.setPreviousSchedule();
     });
-  
+
     $scope.setPreviousSchedule = function() {
         $scope.resetAll();
         $http.get('/availability').then(function successCallback(response) {
@@ -469,7 +470,7 @@ application.controller('availabilityInfoController', function($scope, $location,
                     day = $scope.days[x];
                     for (var i = 0; i < 6; i++) {
                         for (var y = 0; y < res.data.length; y++) {
-                            if(day === res.data[y].calendarDay && 
+                            if(day === res.data[y].calendarDay &&
                            (JSON.parse(document.getElementsByName(day)[i].value).startHour) === convertTime24to12(res.data[y].startHour)) {
                                document.getElementsByName(day)[i].checked = true;
                            }
@@ -519,20 +520,20 @@ application.controller('languagesInfoController', function($scope, $location, $h
                         {'name':'Verilog','level':'verilog_group'},
                         {'name':'XML','level':'xml_group'}
                        ];
-                       
+
      $scope.ides = [{'name':'Android Studio','box':'as_box'},
                     {'name':'Brackets','box':'brackets_box'},
                     {'name':'IntelliJ','box':'intellij_box'},
                     {'name':'NetBeans','box':'netbeans_box'},
                     {'name':'Xcode','box':'xcode_box'}
                    ];
-                   
+
      $scope.tools = [{'name':'GitHub','box':'github_box'},
                      {'name':'Taiga','box':'taiga_box'},
                      {'name':'Slack','box':'slack_box'}
                     ];
-                 
-    // on page load, retrieve prior saved data                  
+
+    // on page load, retrieve prior saved data
     angular.element(document).ready(function(){
         $http.get('/languages').then(function successCallback(response) {
             var res = JSON.parse(JSON.stringify(response.data));
@@ -540,7 +541,7 @@ application.controller('languagesInfoController', function($scope, $location, $h
             // loads all other languages into array
             for (var k = 0; k < res.data.languageData.length; k++) {
                 if(res.data.languageData[k].OtherLanguage != null) {
-                    $scope.languages.push({'name' : res.data.languageData[k].OtherLanguage, 'level' : res.data.languageData[k].OtherLevel});   
+                    $scope.languages.push({'name' : res.data.languageData[k].OtherLanguage, 'level' : res.data.languageData[k].OtherLevel});
                 }
             }
             // populates page of previous language selections
@@ -555,7 +556,7 @@ application.controller('languagesInfoController', function($scope, $location, $h
             // loads all other ides into array
             for (var p = 0; p < res.data.ideData.length; p++) {
                 if(res.data.ideData[p].OtherIDE != null) {
-                    $scope.ides.push({'name' : res.data.ideData[p].OtherIDE, 'box' : 1});     
+                    $scope.ides.push({'name' : res.data.ideData[p].OtherIDE, 'box' : 1});
                 }
             }
             // populates page of previous ide selections
@@ -563,14 +564,14 @@ application.controller('languagesInfoController', function($scope, $location, $h
                 for (var n = 0; n < res.data.ideData.length; n++) {
                     if ($scope.ides[m].name === res.data.ideData[n].isIDE) {
                         $scope.ides[m].box = 1;
-                    }  
+                    }
                 }
             }
             // fill previous saved tools selections
             // loads all other tools into array
             for (var s = 0; s < res.data.toolData.length; s++) {
                 if(res.data.toolData[s].OtherTool != null) {
-                    $scope.tools.push({'name' : res.data.toolData[s].OtherTool, 'box' : 1});     
+                    $scope.tools.push({'name' : res.data.toolData[s].OtherTool, 'box' : 1});
                 }
             }
             // populates page of previous tool selections
@@ -578,7 +579,7 @@ application.controller('languagesInfoController', function($scope, $location, $h
                 for (var r = 0; r < res.data.toolData.length; r++) {
                     if ($scope.tools[q].name === res.data.toolData[r].isTool) {
                         $scope.tools[q].box = 1;
-                    }  
+                    }
                 }
             }
         }, function errorCallback(response) {
@@ -598,7 +599,7 @@ application.controller('languagesInfoController', function($scope, $location, $h
             if ($scope.languages[i].level === 'Expert' || $scope.languages[i].level === 'Proficient' || $scope.languages[i].level === 'Novice') {
                 var arr = [$scope.languages[i].name, $scope.languages[i].level, null, null, UserInfoService.getUserId()];
                 languages.push(arr);
-            }   
+            }
         }
         // Grabs any pre-populated Other Languages
         for (var j = 12; j < $scope.languages.length; j++) {
@@ -610,13 +611,13 @@ application.controller('languagesInfoController', function($scope, $location, $h
         // Grabs any new Other Languages
         var count = document.getElementById('spaceforlanguages').getElementsByTagName('input').length / 4; // Each other language has 4 inputs (text, 3 radio buttons)
         if ($scope.otherLanguage != null) {
-            for (var k = 0; k < count; k++) {    
+            for (var k = 0; k < count; k++) {
                 if ($scope.otherLanguage[k+1] != null && $scope.otherLanguage[k+1] != '' && $scope.otherLanguageLevel[k+1] != null) {
-                    var arr = [null, null, $scope.otherLanguage[k+1], $scope.otherLanguageLevel[k+1], UserInfoService.getUserId()]; 
-                    languages.push(arr);  
+                    var arr = [null, null, $scope.otherLanguage[k+1], $scope.otherLanguageLevel[k+1], UserInfoService.getUserId()];
+                    languages.push(arr);
                 }
-            } 
-        }      
+            }
+        }
         data.push(languages);
 
         // 5 is number of hard coded ides in $scope.ides
@@ -624,7 +625,7 @@ application.controller('languagesInfoController', function($scope, $location, $h
             if ($scope.ides[i].box === 1) {
                 var arr = [$scope.ides[i].name, null, UserInfoService.getUserId()];
                 ides.push(arr);
-            }   
+            }
         }
         // Grabs any pre-populated Other IDEs
         for (var j = 5; j < $scope.ides.length; j++) {
@@ -638,11 +639,11 @@ application.controller('languagesInfoController', function($scope, $location, $h
         if ($scope.otherIDE != null) {
             for (var k = 0; k < count; k++) {
                 if ($scope.otherIDE[k+1] != null && $scope.otherIDE[k+1] != '') {
-                    var arr = [null, $scope.otherIDE[k+1], UserInfoService.getUserId()]; 
-                    ides.push(arr);  
+                    var arr = [null, $scope.otherIDE[k+1], UserInfoService.getUserId()];
+                    ides.push(arr);
                 }
-            }   
-        }       
+            }
+        }
         data.push(ides);
 
         // 3 is number of hard coded tools in $scope.tools
@@ -650,7 +651,7 @@ application.controller('languagesInfoController', function($scope, $location, $h
             if ($scope.tools[i].box === 1) {
                 var arr = [$scope.tools[i].name, null, UserInfoService.getUserId()];
                 tools.push(arr);
-            }   
+            }
         }
         // Grabs any pre-populated Other Tools
         for (var j = 3; j < $scope.tools.length; j++) {
@@ -664,8 +665,8 @@ application.controller('languagesInfoController', function($scope, $location, $h
         if ($scope.otherTool != null) {
             for (var k = 0; k < count; k++) {
                 if ($scope.otherTool[k+1] != null && $scope.otherTool[k+1] != '') {
-                    var arr = [null, $scope.otherTool[k+1], UserInfoService.getUserId()]; 
-                    tools.push(arr);  
+                    var arr = [null, $scope.otherTool[k+1], UserInfoService.getUserId()];
+                    tools.push(arr);
                 }
             }
         }
@@ -682,10 +683,10 @@ application.controller('languagesInfoController', function($scope, $location, $h
         }
         $http.post('/languages', pkgData).then(function successCallback(response) {
             if (doRoute === true) {
-                $location.path('/courses'); 
+                $location.path('/courses');
             } else {
                 $scope.saveMessage = 'Save Successful!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.saveMessage = '';
                 }, 1500);
             }
@@ -696,10 +697,10 @@ application.controller('languagesInfoController', function($scope, $location, $h
 
     $scope.deselectLevel = function(element, count) {
         if (element.language) {
-            element.language.level = null;   
+            element.language.level = null;
         } else if (count)  {
             element.otherLanguageLevel[count] = null;
-        }  
+        }
     }
 
     // Not functioning -- Still need to clear ides and tools
@@ -709,12 +710,12 @@ application.controller('languagesInfoController', function($scope, $location, $h
                 $scope.languages[i].level = null;
             }
         }
-    }*/       
+    }*/
 });
 
 application.controller('coursesInfoController', function($scope, $location, $http, $timeout, UserInfoService, AppStatusService) {
     $scope.courses = [];
-    
+
     $scope.logout = function() {
         UserInfoService.clearUserSession();
         $location.path('/login');
@@ -726,8 +727,8 @@ application.controller('coursesInfoController', function($scope, $location, $htt
             }, function errorCallback(response) {
                 //TODO
             });
-                         
-    // on page load, retrieve prior saved data                  
+
+    // on page load, retrieve prior saved data
     angular.element(document).ready(function(){
         $http.get('/courses').then(function successCallback(response) {
             var res = JSON.parse(JSON.stringify(response.data));
@@ -735,7 +736,7 @@ application.controller('coursesInfoController', function($scope, $location, $htt
             // loads all other courses into array
             for (var k = 0; k < res.data.courseData.length; k++) {
                 if(res.data.courseData[k].OtherCourse != null) {
-                    $scope.courses.push({'name' : res.data.courseData[k].OtherCourse, prefer: res.data.courseData[k].isOtherPrefer, qualified: res.data.courseData[k].isOtherQualified, prevTA: res.data.courseData[k].isOtherPreviouslyTA, prevGrader: res.data.courseData[k].isOtherPreviouslyGrader});   
+                    $scope.courses.push({'name' : res.data.courseData[k].OtherCourse, prefer: res.data.courseData[k].isOtherPrefer, qualified: res.data.courseData[k].isOtherQualified, prevTA: res.data.courseData[k].isOtherPreviouslyTA, prevGrader: res.data.courseData[k].isOtherPreviouslyGrader});
                 }
             }
             // populates page of previous course selections
@@ -762,27 +763,27 @@ application.controller('coursesInfoController', function($scope, $location, $htt
         // gets length of courses in database
         for (var i = 0; i < $scope.courseLength; i++) {
             if ($scope.courses[i].prefer === 1 || $scope.courses[i].qualified === 1 || $scope.courses[i].prevTA === 1 || $scope.courses[i].prevGrader === 1) {
-                var arr = [$scope.courses[i].CourseSection, $scope.courses[i].prefer, $scope.courses[i].qualified, $scope.courses[i].prevTA, $scope.courses[i].prevGrader, null, null, null, null, null, UserInfoService.getUserId()];
+                var arr = [$scope.courses[i].CourseSection, ($scope.courses[i].prefer === null ? 0:$scope.courses[i].prefer), ($scope.courses[i].qualified === null ? 0 : $scope.courses[i].qualified), ($scope.courses[i].prevTA === null ? 0 : $scope.courses[i].prevTA), ($scope.courses[i].prevGrader === null ? 0 : $scope.courses[i].prevGrader), null, null, null, null, null, UserInfoService.getUserId()];
                 courses.push(arr);
-            }   
+            }
         }
         // Grabs any pre-populated Other Courses
         for (var j = $scope.courseLength; j < $scope.courses.length; j++) {
             if ($scope.courses[j].prefer === 1 || $scope.courses[j].qualified === 1 || $scope.courses[j].prevTA === 1 || $scope.courses[j].prevGrader === 1) {
-                var arr = [null, null, null, null, null, $scope.courses[j].name, $scope.courses[j].prefer, $scope.courses[j].qualified, $scope.courses[j].prevTA, $scope.courses[j].prevGrader, UserInfoService.getUserId()];
+                var arr = [null, null, null, null, null, $scope.courses[j].name, $scope.courses[i].CourseSection, ($scope.courses[i].prefer === null ? 0:$scope.courses[i].prefer), ($scope.courses[i].qualified === null ? 0 : $scope.courses[i].qualified), ($scope.courses[i].prevTA === null ? 0 : $scope.courses[i].prevTA), ($scope.courses[i].prevGrader === null ? 0 : $scope.courses[i].prevGrader), UserInfoService.getUserId()];
                 courses.push(arr);
             }
         }
         // Grabs any new Other Courses
         var count = document.getElementById('spaceforcourses').getElementsByTagName('input').length / 5; // Each other course has 4 inputs (text, 4 radio buttons)
         if ($scope.otherCourse != null) {
-            for (var k = 0; k < count; k++) {  
+            for (var k = 0; k < count; k++) {
                 if ($scope.otherCourse[k+1] != null && $scope.otherCourse[k+1] != '' && ($scope.otherPrefer[k+1] === 1 || $scope.otherQualified[k+1] === 1 || $scope.otherPrevTA[k+1] === 1 || $scope.otherPrevGrader[k+1] === 1)) {
-                    var arr = [null, null, null, null, null, $scope.otherCourse[k+1], $scope.otherPrefer[k+1], $scope.otherQualified[k+1], $scope.otherPrevTA[k+1], $scope.otherPrevGrader[k+1], UserInfoService.getUserId()]; 
-                    courses.push(arr);  
+                    var arr = [null, null, null, null, null, $scope.otherCourse[k+1], ($scope.otherPrefer[k+1] === null ? 0 : $scope.otherPrefer[k+1]), ($scope.otherQualified[k+1] === null ? 0 : $scope.otherQualified[k+1]), ($scope.otherPrevTA[k+1] === null ? 0 : $scope.otherPrevTA[k+1]), ($scope.otherPrevGrader[k+1] === null ? 0 : $scope.otherPrevGrader[k+1]), UserInfoService.getUserId()];
+                    courses.push(arr);
                 }
-            } 
-        }      
+            }
+        }
         data.push(courses);
         user.push(UserInfoService.getUserId());
         data.push(user);
@@ -796,10 +797,10 @@ application.controller('coursesInfoController', function($scope, $location, $htt
         }
         $http.post('/courses', pkgData).then(function successCallback(response) {
             if (doRoute === true) {
-                $location.path('/studentHome'); 
+                $location.path('/studentHome');
             } else {
                 $scope.saveMessage = 'Save Successful!';
-                $timeout(function() { 
+                $timeout(function() {
                     $scope.saveMessage = '';
                 }, 1500);
             }

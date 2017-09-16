@@ -15,8 +15,8 @@
                 <li><a href="#!/pcUpdateAllEnrollments">Update Enrollment</a></li>
                 <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
             </ul>
-        </nav>  
-    </header>  
+        </nav>
+    </header>
     <div class="studentApp">
         <label><h1>{{contactInfo.Name}}</h1></label>
         <fieldset>
@@ -25,12 +25,14 @@
                 <table>
                     <tr>
                         <th>Email</th>
+												<th>ASU ID </th>
                         <th>Phone Number</th>
                         <th>Mobile Number</th>
                         <th>Address</th>
                     </tr>
                     <tr>
                         <td>{{contactInfo.UserEmail}}</td>
+												<td>{{studentId}}</td>
                         <td>{{contactInfo.PhoneNumber}}</td>
                         <td>{{contactInfo.MobileNumber}}</td>
                         <td>{{contactInfo.AddressOne}}, {{contactInfo.AddressTwo}}<br>
@@ -91,12 +93,12 @@
                     <table>
                         <tr>
                             <th ng-repeat='language in languages'>
-                                {{language.isLanguage}} 
+                                {{language.isLanguage}}
                                 {{language.OtherLanguage}}</th>
                         </tr>
                         <tr>
                             <td ng-repeat='language in languages'>
-                                {{language.LanguageLevel}} 
+                                {{language.LanguageLevel}}
                                 {{language.OtherLevel}}</td>
                         </tr>
                     </table>
@@ -109,7 +111,7 @@
             <div ng-show='ides.length'>
                 <table>
                     <tr>
-                        <td ng-repeat='ide in ides'>{{ide.isIDE}} {{ide.OtherIDE}}</td> 
+                        <td ng-repeat='ide in ides'>{{ide.isIDE}} {{ide.OtherIDE}}</td>
                     </tr>
                 </table>
             </div>
@@ -147,7 +149,7 @@
                         <td>{{course.isPreviouslyTA !=1 ? '':'Yes'}}
                             {{course.isOtherPreviouslyTA !=1 ? '':'Yes'}}</td>
                         <td>{{course.isPreviouslyGrader !=1 ? '':'Yes'}}
-                            {{course.isOtherPreviouslyGrader !=1 ? '':'Yes'}}</td> 
+                            {{course.isOtherPreviouslyGrader !=1 ? '':'Yes'}}</td>
                     </tr>
                 </table>
             </div>
@@ -159,7 +161,7 @@
                 <div ng-show='calendars.length'>
                     <table>
                         <tr>
-                            <th ng-repeat='calendar in calendars'>{{calendar.CalendarDay}}</th> 
+                            <th ng-repeat='calendar in calendars'>{{calendar.CalendarDay}}</th>
                        	</tr>
                         <tr>
                             <td ng-repeat='calendar in calendars'>{{calendar.StartHour}} - {{calendar.StopHour}}</td>

@@ -15,9 +15,9 @@
                 <li><a href="#!/pcUpdateAllEnrollments">Update Enrollment</a></li>
                 <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
             </ul>
-        </nav>  
+        </nav>
     </header>
-   <div class="searchApp"> 
+   <div class="searchApp">
         <label><h2>View Applications</h2></label>
         <form>
             <select ng-model='selectCourse' ng-options="c.CourseSection for c in courses"><option ng-model='pcSelectCourse' style="display: none" value="">{{pcSelectCourse}}</select>
@@ -45,10 +45,10 @@
                     <tr ng-repeat="name in names">
                         <td><input type='checkbox' ng-show='selectStudent' ng-controller='classSummaryController' ng-model='name.selected' ng-true-value='1' ng-false-value='0'/></td>
                         <td><a ng-href='#!/studentInfoPC/{{name.ASURITE_ID}}'>{{name.Name}}</a></td>
-                        <td>{{name.isQualified !=0 ? 'Yes':'No'}}</td>
-                        <td>{{name.isPrefer !=0 ? 'Yes':'No'}}</td>
-                        <td>{{name.isPreviouslyTA !=0 ? 'Yes':'No'}}</td>
-                        <td>{{name.isPreviouslyGrader !=0 ? 'Yes':'No'}}</td>
+                        <td>{{name.isQualified >=1 ? 'Yes':'No'}}</td>
+                        <td>{{name.isPrefer >= 1 ? 'Yes':'No'}}</td>
+                        <td>{{name.isPreviouslyTA >=1 ? 'Yes':'No'}}</td>
+                        <td>{{name.isPreviouslyGrader >=1 ? 'Yes':'No'}}</td>
                         <td>{{name.GPA}}</td>
                         <td>{{name.isFullTime}}</td>
                     </tr>
