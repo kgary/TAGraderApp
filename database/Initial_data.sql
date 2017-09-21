@@ -3,14 +3,14 @@
 -- -----------------------------------------------------
 -- User Table
 -- -----------------------------------------------------
-/*INSERT INTO User_ (ASURITE_ID, FirstName, MiddleName, LastName, UserEmail, UserPassword,
+INSERT INTO User_ (ASURITE_ID, FirstName, MiddleName, LastName, UserEmail, UserPassword,
 UserRole, RegTime, isActive, LoginTime) VALUES
 ('kgary', 'Kevin', NULL, 'Gary', 'kgary@email.asu.edu',
 '$2a$10$3O4KY/eSuVsrxDlrepXXrePJprc.JpesVNW7ECA030ICdeextfncO', 'program chair',
 '2017-04-24 00:00:01', 1, '2017-04-24 00:00:01'),
 ('emallen', 'Betsy', NULL, 'Allen', 'emallen@asu.edu',
 '$2a$10$9LtwRA2P4sGhkhQOMsbjbOQ0uO90T357d0IbT0fTYpHRWBkxNi5xe', 'administrative',
-'2017-04-24 00:00:01', 1, '2017-04-24 00:00:01');*/
+'2017-04-24 00:00:01', 1, '2017-04-24 00:00:01');
 
 -- -----------------------------------------------------
 -- Course Table
@@ -52,5 +52,5 @@ INSERT INTO Courses (CourseID, CourseSection, CourseName) VALUES
 -- -----------------------------------------------------
 -- Deadline Table
 -- -----------------------------------------------------
-/*INSERT INTO Deadline (DeadlineID, CurrentSemester, DeadlineDate) VALUES
-(1, 'Fall', '2017-08-01');*/
+INSERT INTO Deadline (DeadlineID, CurrentSemester, DeadlineDate) VALUES
+(1, 'Fall', '2017-08-01');
