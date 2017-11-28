@@ -24,6 +24,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
             }
             var className = { 'class' : SendClassService.getClassNumber() };
             $http.post('/programChair/getClassInfo', className).then(function successCallback(response) {
+                //alert(JSON.stringify(response));
                 if (response.data[0] != null) {
                     $scope.populateSelectedClassInfo(response)
                     $scope.populateClassRequirements(response);
@@ -202,6 +203,7 @@ programChair.controller('classSummaryController', function($route, $scope, $http
 
     // Method to populate faculty requests section of class summary page
     $scope.populateFacultyRequests = function(response) {
+      //alert("facult");
         $scope.showFacultyRequests = true;
         if (response.data[3][0].Rank1 != null) {
             var studentID = { 'studentID' : response.data[3][0].Rank1 };
@@ -893,6 +895,7 @@ programChair.controller('programChairEvalController', function($scope, $http, $l
 // View Applications
 programChair.controller('programChairSearchAppController', function($scope, $location, $http, SendClassService, SendStudentService, UserInfoService, UserAuthService) {
     angular.element(document).ready(function() {
+      $scope.toggle = 1;
         $scope.name = UserInfoService.getFullName();
 
         $scope.logout = function() {
@@ -919,6 +922,8 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
             if (classNameString != null && classNameString.charAt(classNameString.length - 1) === '*') {
                 classNameString = classNameString.replace('*', '');
             }
+
+            $scope.pcSelectCourse = classNameString;
             $scope.selectStudent = true;
             SendStudentService.clearStudentsToAssign();
             $http.get('/programChair/courses').then(function successCallback(response) {
@@ -941,13 +946,47 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
             }, function errorCallback(response) {
                 //TODO
             });
-            $http.get('/programChair/applicationNames').then(function successCallback(response) {
+
+            var filter;
+
+            filter = {
+              'filter' : $scope.toggle
+            };
+
+            $http.post('/programChair/applicationNames',filter).then(function successCallback(response) {
                 $scope.names = response.data;
             }, function errorCallback(response) {
                 //TODO
             });
         }
     });
+
+    $scope.filteronName = function()
+    {
+      if($scope.toggle == 1)
+      {
+        $scope.toggle = 2;
+      }
+      else if($scope.toggle == 2)
+      {
+        $scope.toggle = 3;
+      }
+      else if($scope.toggle == 3)
+      {
+        $scope.toggle = 2;
+      }
+      var filter;
+
+      filter = {
+        filter : $scope.toggle
+      };
+
+      $http.post('/programChair/applicationNames',filter).then(function successCallback(response) {
+          $scope.names = response.data;
+      }, function errorCallback(response) {
+          //TODO
+      });
+    }
 
     // Searches applications in database
     $scope.searchApp = function(classString) {
@@ -962,6 +1001,7 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
                     $scope.noSearch = true;
                     $scope.noStudents = true;
                 } else {
+                  console.log("Inside else");
                     $scope.search = true;
                     $scope.noSearch = true;
                     $scope.noStudents = false;
@@ -992,7 +1032,7 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
                         $scope.noSearch = true;
                         $scope.noStudents = false;
                         $scope.names = response.data;
-                        alert($scope.names[i].isFullTime);
+                        //alert($scope.names[i].isFullTime);
                         for (var i = 0; i <$scope.names.length; i++) {
                             if ($scope.names[i].isFullTime === 1) {
                                 $scope.names[i].isFullTime = 'Yes';
@@ -1050,11 +1090,16 @@ programChair.controller('programChairSearchAppController', function($scope, $loc
             return result * sortOrder;
         }
     }
+
 });
 
 //View Student Application Info
 programChair.controller('programChairStudentInfoController', function($scope, $routeParams, $http, $location, $timeout, UserInfoService, UserAuthService) {
     $scope.studentId = $routeParams.studentName
+    //$scope.fourPlusOneOptions = ["Yes","No"];
+
+
+
     var studentData = {
             studentId : $scope.studentId
     };
@@ -1067,6 +1112,21 @@ programChair.controller('programChairStudentInfoController', function($scope, $r
     // populates application table
     $http.post('/programChair/applicationTable', studentData).then(function successCallback(response) {
         $scope.appInfo = response.data;
+
+        $scope.fourPlusOne = {
+        "type": "select",
+        "name": "Service",
+        "value": $scope.appInfo.isFourPlusOne !=0 ? 'Yes':'No',
+        "values": [ "Yes","No"]
+      };
+
+      $scope.gpa = {
+        "type": "select",
+        "name": "Service",
+        "value": $scope.appInfo.GPA,
+        "values": [1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3.0,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9,4]
+      }
+
         // get feedback based on appID
         studentAppID = response.data.AppID;
         $http.post('/programChair/getFeedback', {appID:studentAppID}).then(function successCallback(response) {
@@ -1221,6 +1281,51 @@ programChair.controller('programChairStudentInfoController', function($scope, $r
                 $scope.feedbackSaveMessage = 'Uh-oh, something failed! Please try again!';
             });
         }
+    }
+
+    $scope.overrideFourPlusone = function(isGPA)
+    {
+        console.log(isGPA);
+          var overRideData;
+          if(isGPA)
+          {
+            overRideData = {
+              appID : studentAppID,
+              gpa : $scope.gpa.value
+            }
+          }
+          else {
+            overRideData = {
+              appID : studentAppID,
+              fourPlusOne : ($scope.fourPlusOne.value == 'Yes' ? 1 : 0)
+            }
+          }
+          $http.post('/programChair/override', overRideData).then(function successCallback(response) {
+            $scope.feedbackSaveMessage = 'Successfully saved feedback!';
+            $timeout(function() {
+                $scope.feedbackSaveMessage = '';
+            }, 1500);
+          }, function errorCallback(response) {
+              alert('Uh-oh, something failed while overriding! Please try again!');
+          });
+    }
+
+    $scope.submitRating = function() {
+      //alert($scope.rating);
+      var rating = {
+        appID:studentAppID,
+        rating:$scope.rating
+      }
+      $http.post('/programChair/ApplicationRating', rating).then(function successCallback(response) {
+        $scope.feedbackText = null;
+        $scope.hasComplied = 0;
+        $scope.feedbackSaveMessage = 'The Rating for the application has been submitted';
+        $timeout(function() {
+            $scope.feedbackSaveMessage = '';
+        }, 1500);
+    }, function errorCallback(response) {
+        $scope.feedbackSaveMessage = 'Uh-oh, something failed! Please try again!';
+      });
     }
 
     $scope.name = UserInfoService.getFullName();

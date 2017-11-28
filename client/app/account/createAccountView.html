@@ -4,9 +4,9 @@
         <li class="tab active"><a href="#!/createAccount">Create Account</a></li>
     </ul>
     <div class="tab-content">
-        <div id="signup">          
-            <h1>Create Account</h1>        
-            <form ng-submit='submitAccount()'>        
+        <div id="signup">
+            <h1>Create Account</h1>
+            <form ng-submit='submitAccount()'>
                 <div class="field-wrap">
                     <label>First Name:<span class="req">*</span></label><br>
                     <input type="fname" ng-model='firstname' required autocomplete="off"/>
@@ -34,7 +34,7 @@
                     <div class="help">
                         <label>Set A Password<span class="req">*</span></label><br>
                         <input type="password" ng-model='password1' ng-change='passwordError=false' required autocomplete="off"/>
-                        <img src="/assets/images/pwreq.png" alt="Req" style="width:20px;height:20px;" 
+                        <img src="/assets/images/pwreq.png" alt="Req" style="width:20px;height:20px;"
                         title='Password Requirements:
                         -8-20 Characters
                         -1 Lowercase Letter
@@ -47,11 +47,23 @@
                     <label>Re-enter Password<span class="req">*</span></label><br>
                     <input type="password" ng-model='password2' ng-change='passwordError=false' required autocomplete="off"/>
                 </div>
+                <div class="field-wrap">
+                    <label>Security Question 1<span class="req">*</span></label><br>
+                    <select ng-model="selectedSecurityQuestion1" ng-change='securityQuestion=false' ng-options="x for x in questions">
+                    </select><br>
+                    <input type="text" ng-model='securityQuestion1' ng-change='securityQuestionError=false' required autocomplete="off"/><br><br>
+                    <label>Security Question 2<span class="req">*</span></label><br>
+                    <select ng-model="selectedSecurityQuestion2" ng-disabled= "securityQuestion" ng-options="x for x in questions | custFile : selectedSecurityQuestion1">
+                    </select><br>
+                    <input type="text" ng-disabled= "securityQuestion" ng-model='securityQuestion2' ng-change='securityQuestionError=false' required autocomplete="off"/>
+                    <!-- <input type="sQuestion" ng-model='securityQuestion' required autocomplete="off"/> -->
+                </div>
                 <p class="error" ng-model='userErrorMessage' ng-show='userError' style='color:red'><br><br>{{userErrorMessage}}</p>
                 <p class="error" ng-model='emailErrorMessage' ng-show='emailError' style='color:red'><br><br>{{emailErrorMessage}}</p>
                 <p class="error" ng-model='passwordErrorMessage' ng-show='passwordError' style='color:red'><br>{{passwordErrorMessage}}</p>
-                <button class="create-button" type="submit">Create Account</button>  
+                <p class="error" ng-model='securityQuestionMessage' ng-show='securityQuestionError' style='color:red'><br>{{securityQuestionMessage}}</p>
+                <button class="create-button" type="submit">Create Account</button>
             </form>
         </div>
-    </div>   
+    </div>
  </div>
