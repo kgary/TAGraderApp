@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -15,13 +15,15 @@ router.use(function(req, res, next) {
 });
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 // Checks if user already exists, if so alerts user, if not saves account
 router.post('/', function(req, res) {
@@ -36,17 +38,20 @@ router.post('/', function(req, res) {
         }
         connection.query('SELECT * FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows) {
           if(err2) {
+            connection.release();
             console.log('Error performing query: ' + err2);
             throw err2;
           } else if (!rows.length) {
             connection.query('INSERT INTO User_ SET ?', [req.body], function(err2) {
                 connection.query('INSERT INTO Application (ASURITE_ID) VALUES (?)', [req.body.ASURITE_ID], function(err3, rows) {
+                  connection.release();
                     if (err3) {
                         console.log('Error performing query: ' + err3);
                         throw err3;
                     }
                 });
               if(err2) {
+                connection.release();
                 console.log('Error performing query: ' + err2);
                 throw err2;
               } else {
@@ -56,7 +61,6 @@ router.post('/', function(req, res) {
           } else if (rows) {
             res.send({'error' : 1});
           }
-          connection.release();
         });
       });
     }
@@ -72,6 +76,7 @@ router.get('/recoverPassword', function(req, res) {
           throw err;
         }
         connection.query('SELECT securityquestion , securityquestion2 FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows) {
+          connection.release();
           if(err2) {
             console.log('Error performing query: ' + err2);
             throw err2;
@@ -98,7 +103,6 @@ router.get('/recoverPassword', function(req, res) {
           } else {
             res.send({'error' : 1});
           }
-          connection.release();
         });
       });
 });
@@ -111,6 +115,7 @@ router.get('/retrievePassword', function(req, res) {
       throw err;
     }
     connection.query('SELECT securityquestion , securityquestion2 , securityquestionanswer , securityquestionanswer2 FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows) {
+      connection.release();
       if(err2) {
         console.log('Error performing query: ' + err2);
         throw err2;
@@ -137,7 +142,6 @@ router.get('/retrievePassword', function(req, res) {
       } else {
         res.send({'error' : 1});
       }
-      connection.release();
     });
   });
 });

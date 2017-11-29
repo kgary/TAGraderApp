@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var fs = require("fs");
 var multer  = require('multer');
 
@@ -26,7 +26,7 @@ var storage = multer.diskStorage({
                 console.log(err)
             }
             else {
-                cb(null, iposPath);   
+                cb(null, iposPath);
             }
         });
     },
@@ -38,13 +38,15 @@ var storage = multer.diskStorage({
 router.use(multer({storage : storage}).any());
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 // Save ipos attachment information in database
 router.post('/', function(req, res) {
@@ -58,17 +60,20 @@ router.post('/', function(req, res) {
             } else {
                 connection.query('SELECT IposName FROM Attachment WHERE ASURITE_ID = ?', [req.user.username], function(err2, rows) {
                     if(err2) {
+                      connection.release();
                         console.log('Error performing query: ' + err2);
                         throw err2;
                     } else if (!rows.length) {
-                        connection.query('INSERT INTO Attachment (IposName, IposUploadDate, ASURITE_ID) VALUES (?, ?, ?)', [req.files[0].originalname, uploadTime, req.user.username], function(err3) { 
+                        connection.query('INSERT INTO Attachment (IposName, IposUploadDate, ASURITE_ID) VALUES (?, ?, ?)', [req.files[0].originalname, uploadTime, req.user.username], function(err3) {
                             if(err3) {
+                              connection.release();
                                 console.log('Error performing query: ' + err3);
                                 throw err3;
                             }
                         });
                     } else {
-                        connection.query('UPDATE Attachment SET IposName = ?, IposUploadDate = ? WHERE ASURITE_ID = ?', [req.files[0].originalname, uploadTime, req.user.username], function(err4) { 
+                        connection.query('UPDATE Attachment SET IposName = ?, IposUploadDate = ? WHERE ASURITE_ID = ?', [req.files[0].originalname, uploadTime, req.user.username], function(err4) {
+                          connection.release();
                             if(err4) {
                                 console.log('Error performing query: ' + err4);
                                 throw err4;
@@ -77,7 +82,6 @@ router.post('/', function(req, res) {
                     }
                 });
             }
-        connection.release();
         });
     }
     res.sendStatus(200);
@@ -91,7 +95,7 @@ function ensureExists(uploadPath, attachmentsPath, userPath, iposPath, mask, fil
     }
     fs.mkdir(uploadPath, mask, function(err) {
         if (err && err.code != 'EEXIST') {
-            cb(err); 
+            cb(err);
         } else if (!err || err && err.code == 'EEXIST') {
             fs.mkdir(attachmentsPath, mask, function(err) {
                 if (err && err.code != 'EEXIST') {
@@ -99,11 +103,11 @@ function ensureExists(uploadPath, attachmentsPath, userPath, iposPath, mask, fil
                 } else if (!err || err && err.code == 'EEXIST') {
                     fs.mkdir(userPath, mask, function(err) {
                         if (err && err.code != 'EEXIST') {
-                            cb(err);   
+                            cb(err);
                         } else if (!err || err && err.code == 'EEXIST') {
                             fs.mkdir(iposPath, mask, function(err) {
                                 if (err && err.code != 'EEXIST') {
-                                    cb(err);   
+                                    cb(err);
                                 } else if (!err || err && err.code == 'EEXIST') {
                                     fs.readdir(iposPath, function(err, files) {
                                         if (err) {
@@ -118,13 +122,13 @@ function ensureExists(uploadPath, attachmentsPath, userPath, iposPath, mask, fil
                                         }
                                     });
                                     cb(null);
-                                } 
+                                }
                             });
-                        } 
+                        }
                     });
-                } 
+                }
             });
-        } 
+        }
     });
 }
 

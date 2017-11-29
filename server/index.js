@@ -34,10 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Use JWT for token authorization
 app.use(expressJWT({secret:'sblapp123',
                     getToken: function fromHeaderOrQuerystring (req) {
-                      console.log("hello");
-                      console.log(req);
-                      console.log(req.query);
-                      console.log(req.query.access_token);
+
      if (req.query && req.query.access_token) {
       //console.log(req.query.access_token);
       return req.query.access_token;

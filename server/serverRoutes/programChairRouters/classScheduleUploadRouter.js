@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var fs = require("fs");
 var multer  = require('multer');
 
@@ -50,13 +50,15 @@ var storage = multer.diskStorage({
 router.use(multer({storage : storage}).any());
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 // Save attachment information into database
 router.post('/', function(req, res) {
@@ -205,25 +207,30 @@ router.post('/', function(req, res) {
                             connection.query('DELETE FROM Schedule_',  function(err2, rows) {
 console.log("PREPARING QUERY: " + rows);
                                 if(err2) {
+                                  connection.release();
                                     console.log('Error performing query DELETE FROM Schedule_: ' + err2);
                                     throw err2;
                                 } else {
                                     connection.query('INSERT INTO Schedule_ (SessionIs, Location, Subject, CatalogNumber, CourseNumber, CourseTitle, Days, StartHours, EndHours, FirstName, LastName, AssignedStatus, TARequiredHours, GraderRequiredHours, EnrollmentNumPrev) VALUES ?', [row], function(err3) {
                                         if(err3) {
+                                          connection.release();
                                             console.log('Error performing query INSERT INTO Schedule_: ' + [row] + ' error: ' + err3);
                                             res.send({error : 1});
                                         } else {
                                             connection.query('DELETE FROM Student_Request', function(err4) {
                                                 if(err4) {
+                                                  connection.release();
                                                     console.log('Error performing query DELETE FROM Student_Request: ' + err4);
                                                     throw err4;
                                                 } else {
                                                     connection.query('DELETE FROM Placement', function(err5) {
                                                         if(err5) {
+                                                          connection.release();
                                                             console.log('Error performing query DELETE FROM Placement: ' + err5);
                                                             throw err5;
                                                         } else {
                                                             connection.query('DELETE FROM Enrollment', function(err6) {
+                                                              connection.release();
                                                                 if(err6) {
                                                                     console.log('Error performing query DELETE FROM Enrollment: ' + err6);
                                                                     throw err6;
@@ -243,9 +250,7 @@ console.log("PREPARING QUERY: " + rows);
                     }
 
                 });
-
         }
-        connection.release();
     });
 });
 

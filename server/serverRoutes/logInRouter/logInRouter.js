@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -16,13 +16,15 @@ router.use(function(req, res, next) {
 });
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 var sendMail = require('gmail-send')({
     user : 'noreplyasuser@gmail.com',
@@ -44,6 +46,7 @@ router.post('/', function(req, res) {
     //  Use connection to query log in credentials
     connection.query('SELECT User_.*, Application.AppStatus FROM User_ LEFT JOIN Application ON ' +
                      'User_.ASURITE_ID = Application.ASURITE_ID WHERE User_.ASURITE_ID = ?', [req.body.username], function(err2, rows){
+                       connection.release();
       if(err2) {
         console.log('Error performing query: ' + err2);
         throw err2;
@@ -52,7 +55,7 @@ router.post('/', function(req, res) {
       } else if (rows) {
         checkHash(req.body.password, rows[0].UserPassword, res, req, rows, sendRes);
       }
-      connection.release();
+
     });
   });
 });
@@ -68,6 +71,7 @@ router.post('/recoverPassword', function(req, res) {
         }
         //securityquestion , securityquestion2
         connection.query('SELECT * FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows) {
+          connection.release();
           if(err2) {
             console.log('Error performing query: ' + err2);
             throw err2;
@@ -103,7 +107,6 @@ router.post('/recoverPassword', function(req, res) {
           } else {
             res.send({'error' : 1,"message" : "Unexpected Error while password recovery, Please contact kgary@asu.edu"});
           }
-          connection.release();
         });
       });
 });
@@ -117,6 +120,7 @@ router.post('/retrievePassword', function(req, res) {
       throw err;
     }
     connection.query('SELECT * FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows) {
+      connection.release();
       if(err2) {
         console.log('Error performing query: ' + err2);
         throw err2;
@@ -152,7 +156,6 @@ router.post('/retrievePassword', function(req, res) {
       } else {
         res.send({'error' : 1, "message" : "Unexpected Error while password recovery, Please contact kgary@asu.edu"});
       }
-      connection.release();
     });
   });
 });
@@ -177,6 +180,7 @@ router.post('/changePassword', function(req, res) {
             }
 
             connection.query('UPDATE User_ set UserPassword = ? where ASURITE_ID = ?', [req.body.newPassword,req.body.asuID], function(err2) {
+              connection.release();
                 if(err2) {
                     console.log('Error performing query: ' + err2);
                     throw err2;
@@ -184,7 +188,6 @@ router.post('/changePassword', function(req, res) {
                     res.send({'error':0});
                     }
             });
-            connection.release();
         });
 
     }})
@@ -238,11 +241,11 @@ function updateLoginDate (user) {
       throw err;
     }
     connection.query('UPDATE User_ SET LoginTime = ? Where ASURITE_ID = ?', [dateObj, user], function (err2) {
+      connection.release();
       if (err2) {
         console.log('Error performing query: ' + err2);
         throw err2;
       }
-      connection.release();
     });
   });
 }
