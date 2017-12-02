@@ -90,7 +90,7 @@ app.listen(8030, function () {
 
 //  Send requests to correct router
 app.use('/login', logInRouter);
-app.use('/login', createAccountRouter);
+app.use('/createAccount', createAccountRouter);
 app.use('/login/recoverPassword', logInRouter);
 app.use('/login/password-reset', logInRouter);
 app.use('/createAccount/retrievePassword', logInRouter);

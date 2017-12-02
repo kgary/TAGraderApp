@@ -131,7 +131,6 @@ application.controller('educationInfoController', function($scope, $location, $h
         if (!$scope.session) {
             fSession = null;
         } else {
-          alert($scope.session);
           var date = $scope.session.split("-");
           var dateObject = new Date(date[2], date[1] - 1, date[0]);
           fSession = dateObject.toISOString().slice(0, 19).replace('T', ' ');
