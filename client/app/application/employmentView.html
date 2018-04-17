@@ -11,7 +11,7 @@
   </center><br><br>
   <fieldset>
     <legend><span class="number">1</span>Seeking Employment</legend>
-    <label><strong>Max time commitment*</strong></label>
+    <label><strong>Available Max time commitment*</strong></label>
     <input type='radio' ng-model='hours' value='20 hours per week' ng-change='doHoursCheck()'>20 hours per week<br>
     <input type='radio' ng-model='hours' value='10 hours per week' ng-change='doHoursCheck()'>10 hours per week<br><br>
     <label><strong>Desired Position*</strong></label>
@@ -22,10 +22,10 @@
     <input type='radio' ng-model='hasWorked' ng-value=0>No<br><br>
     <input ng-model='international' ng-true-value='1' ng-false-value='0' ng-init='international=0' type="checkbox" id="international-student" name="international-student" ng-change='doHoursCheck()'/> I'm an international student<br>
     <div ng-show="international===1">
-      <label><strong>Speak Test Score*</strong></label><input ng-model='speakTest' type="text" class="hidden" id="speak-test" name="speak-test" placeholder="Type in your speak test score*"><br>
+      <label><strong>Speak Test/TOEFL Score*</strong></label><input ng-model='speakTest' type="text" class="hidden" id="speak-test" name="speak-test" placeholder="Type in your speak test score*"><br>
     </div>
   </fieldset>
-  <fieldset>
+  <!-- <fieldset>
     <legend><span class="number">2</span>Current Employment</legend>
 		<label><strong>Current Employer:</strong></label>
     <input type='text' ng-model='employer'>
@@ -39,15 +39,15 @@
 				To continue, please reduce the hours you are seeking with ASU
 				or you will need to reduce your work hours with your current employer.
     </p>
-  </fieldset>
+  </fieldset> -->
   <form enctype='multipart/form-data'>
     <fieldset>
       <legend><span class="number">3</span>File Attachment (PDF Files Only)</legend>
 			<label><strong>Resume:</strong></label>
       <input type="text" id="resume" ng-model='resumeInput'>
       <input type="file" name="rfile" id="resfile" ng-model='resumeFile' file-input='resumeFile' onchange="angular.element(this).scope().resumeFileNameChanged(this.files)" hidden/>
-      <label class='myButton' for="resfile" id="inline-label">Choose File</label><br><br>  
-      <div ng-show='resumeUploadErrorMessage' style='color:red;'>{{resumeErrorMessage}}<br><br></div> 
+      <label class='myButton' for="resfile" id="inline-label">Choose File</label><br><br>
+      <div ng-show='resumeUploadErrorMessage' style='color:red;'>{{resumeErrorMessage}}<br><br></div>
     </fieldset>
   </form>
   <center>{{saveMessage}}</center><br>

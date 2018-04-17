@@ -1,6 +1,6 @@
 'use strict';
 /*
- * File: app.js 
+ * File: app.js
  * Description: Top level control of the application
  */
 
@@ -38,9 +38,9 @@ app.constant('APPLICATION_LINKS', {
     Courses : '#!/courses'
 });
 
-/* Upon a change in route, this checks if the user is logged in and is the correct 
- * user type to view the route. 
- * Sets the css layout for the next page. 
+/* Upon a change in route, this checks if the user is logged in and is the correct
+ * user type to view the route.
+ * Sets the css layout for the next page.
  * Reroutes a logged in user to home page if they attempt to access login page.
  */
 app.run(function($rootScope, $location, UserAuthService, UserInfoService, USER_ROLES) {
@@ -49,9 +49,9 @@ app.run(function($rootScope, $location, UserAuthService, UserInfoService, USER_R
        // reroute logged in user from hitting login page
        if (next.templateUrl === 'app/login/loginView.html' && UserAuthService.isAuthenticated()) {
            if (UserInfoService.getUserType() === USER_ROLES.student) {
-                $location.path('/studentHome'); 
+                $location.path('/studentHome');
            } else if (UserInfoService.getUserType() === USER_ROLES.faculty) {
-                $location.path('/facultyHome'); 
+                $location.path('/facultyHome');
            } else if (UserInfoService.getUserType() === USER_ROLES.program_chair) {
                 $location.path('/programChairHome');
            } else if (UserInfoService.getUserType() === USER_ROLES.administrative) {
@@ -71,20 +71,57 @@ app.run(function($rootScope, $location, UserAuthService, UserInfoService, USER_R
            } else {
                // user is not or no longer logged in - 401
                UserInfoService.clearUserSession();
-               $location.path('/unauthorized');     
+               $location.path('/unauthorized');
            }
        }
-   }); 
+   });
    $rootScope.$on('$routeChangeSuccess', function(event, current, next) {
         // empty
-   }); 
+   });
 });
 
 app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES) {
+  console.log($locationProvider);
     $routeProvider
         .when('/', {
             redirectTo : '/login',
             permissions : [USER_ROLES.all]
+        })
+        .when('/forgotPassword' ,{
+            templateUrl : 'app/login/forgotpassword.html',
+            controller : 'loginController',
+            permissions : [USER_ROLES.all],
+            resolve : {
+                'set' : function($rootScope, $timeout) {
+                    $rootScope.layout = "/app/login/css/login.css";
+                    $timeout(function() {
+                        $rootScope.mainDisplay = true;
+                    }, 400);
+                }
+            }
+        })
+        // .when('/passwordreset/' ,{
+        //   redirectTo : '/resetpassword',
+        //   permissions : [USER_ROLES.all]
+        // })
+        //
+        // .when('/passwordreset/*' ,{
+        //   redirectTo : '/resetpassword',
+        //   permissions : [USER_ROLES.all]
+        // })
+        //
+        .when('/passwordreset',{
+          templateUrl : '/app/login/passwordreset.html',
+          controller : 'loginController',
+          permissions : [USER_ROLES.all],
+          resolve : {
+              'set' : function($rootScope, $timeout) {
+                  $rootScope.layout = "/app/login/css/login.css";
+                  $timeout(function() {
+                      $rootScope.mainDisplay = true;
+                  }, 400);
+              }
+          }
         })
         .when('/login', {
             templateUrl : 'app/login/loginView.html',
@@ -106,25 +143,25 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
             resolve : {
                     getActions : function($q, $http, UserInfoService, StudentActionsService, AppStatusService, DeadlineDateCheckService) {
                       var deferred = $q.defer();
-                          $http({method: 'POST', 
-                                 url: '/student/getStudentActions', 
+                          $http({method: 'POST',
+                                 url: '/student/getStudentActions',
                                  data: {user: UserInfoService.getUserId()}}).then(function(getActions) {
-                                   StudentActionsService.callTo = getActions.data;	
+                                   StudentActionsService.callTo = getActions.data;
                                    AppStatusService.setStatuses(getActions.data);
                                    DeadlineDateCheckService.studentDateNotice(getActions.data.deadlineDate);
                                    deferred.resolve(getActions);
                           });
                     return deferred.promise;
-                    }, 
+                    },
                     getFeedback : function($q, $http, UserInfoService) {
                       var deferred = $q.defer();
-                          $http({method: 'POST', 
-                                 url: '/student/getApplicationFeedback', 
+                          $http({method: 'POST',
+                                 url: '/student/getApplicationFeedback',
                                  data: {user: UserInfoService.getUserId()}}).then(function(getFeedback) {
                                    deferred.resolve(getFeedback);
                           });
                     return deferred.promise;
-                    }, 
+                    },
                     set : function($rootScope, $timeout) {
                         $rootScope.layout = "/app/users/css/studentView.css";
                         $timeout(function() {
@@ -187,7 +224,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
             resolve : {
                 getPCActions : function($q, $http, DeadlineDateCheckService, UserInfoService, PCActionsService) {
                   var deferred = $q.defer();
-                      $http({method: 'POST', 
+                      $http({method: 'POST',
                            url: '/getPCActions',
                            data: {lastLogin: UserInfoService.getLastLogin()}
                       }).then(function(getPCActions) {
@@ -235,7 +272,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
             resolve : {
                 getPCActions : function($q, $http, DeadlineDateCheckService, UserInfoService, PCActionsService) {
                   var deferred = $q.defer();
-                      $http({method: 'POST', 
+                      $http({method: 'POST',
                            url: '/getPCActions',
                            data: {lastLogin: UserInfoService.getLastLogin()}
                       }).then(function(getPCActions) {
@@ -244,13 +281,13 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                            deferred.resolve(getPCActions);
                       });
                 return deferred.promise;
-                }, 
+                },
                 'set' : function($rootScope, $timeout) {
                     $rootScope.layout = "/app/users/css/programChairView.css";
                     $timeout(function() {
                         $rootScope.mainDisplay = true;
                     }, 200);
-                } 
+                }
             }
         })
         .when('/classSummary', {
@@ -324,7 +361,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                     }, 200);
                 }
             }
-        }) 
+        })
         .when('/adminChangePassword', {
             templateUrl : 'app/administrative/adminChangePasswordView.html',
             permissions : [USER_ROLES.administrative],
@@ -420,7 +457,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                         $rootScope.mainDisplay = true;
                     }, 200);
                 }
-            } 
+            }
         })
         .when('/badrequest', {
             templateUrl : 'app/errors/404.html',
@@ -495,7 +532,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                         $rootScope.mainDisplay = true;
                     }, 200);
                 }
-            } 
+            }
         })
         .when('/availability', {
             templateUrl : 'app/application/availabilityView.html',
@@ -508,7 +545,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                         $rootScope.mainDisplay = true;
                     }, 200);
                 }
-            }  
+            }
         })
         .when('/languages', {
             templateUrl : 'app/application/languagesView.html',
@@ -534,7 +571,7 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                         $rootScope.mainDisplay = true;
                     }, 200);
                 }
-            } 
+            }
         })
         .when('/helpList', {
           templateUrl: 'app/help/helpList.html',
@@ -576,9 +613,9 @@ app.config(function($locationProvider, $routeProvider, $httpProvider, USER_ROLES
                         $rootScope.mainDisplay = true;
                     }, 200);
                 }
-            } 
+            }
         });
-    
+
     // adds http interceptor for adding token to Auth header
     $httpProvider.interceptors.push([
         '$injector',

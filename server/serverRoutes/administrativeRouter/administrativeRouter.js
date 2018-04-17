@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var fs = require('fs');
 var bcrypt = require('bcrypt');
 
@@ -15,13 +15,15 @@ router.use(function(req, res, next) {
 });
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 // Get all Students in Database
 router.post('/applicationNames', function(req, res) {
@@ -32,6 +34,7 @@ router.post('/applicationNames', function(req, res) {
             throw err;
         }
         connection.query("SELECT concat(FirstName, ' ', LastName) Name, AppStatus, Application.ASURITE_ID From User_ INNER JOIN Application ON User_.ASURITE_ID = Application.ASURITE_ID WHERE UserRole = 'student'", [req.body.course], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -43,13 +46,12 @@ router.post('/applicationNames', function(req, res) {
                      var FullName = {
                     'Name'       : rows[i].Name,
                     'AppStatus'  : rows[i].AppStatus,
-                    'ASURITE_ID' : rows[i].ASURITE_ID}; 
+                    'ASURITE_ID' : rows[i].ASURITE_ID};
                     Students.push(FullName);
-                }   
+                }
                 var response = JSON.stringify(Students);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -63,6 +65,7 @@ router.post('/applications', function(req, res) {
             throw err;
         }
         connection.query("SELECT concat(FirstName, ' ', LastName) Name, isQualified, isPrefer, isPreviouslyTA, isPreviouslyGrader, GPA, Application.ASURITE_ID From User_ INNER JOIN Course_Competencies ON User_.ASURITE_ID = Course_Competencies.ASURITE_ID INNER JOIN Application ON User_.ASURITE_ID = Application.ASURITE_ID WHERE isCourse = ? AND (isAcademicProbation = 0 OR isAcademicProbation IS NULL) AND AppStatus = 'complete' AND (SpeakTest >= 26 OR SpeakTest IS NULL) AND ((isQualified = 1 OR isPrefer = 1) OR (isPreviouslyGrader = 1 OR isPreviouslyTA = 1)) ORDER BY isQualified DESC, isPrefer DESC, isPreviouslyTA DESC, isPreviouslyGrader DESC, GPA DESC", [req.body.course], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -78,13 +81,12 @@ router.post('/applications', function(req, res) {
                     'isPrefer'           : rows[i].isPrefer,
                     'isPreviouslyTA'     : rows[i].isPreviouslyTA,
                     'isPreviouslyGrader' : rows[i].isPreviouslyGrader,
-                    'GPA'                : rows[i].GPA}; 
+                    'GPA'                : rows[i].GPA};
                     StudentNames.push(Student);
-                }   
+                }
                 var response = JSON.stringify(StudentNames);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -98,6 +100,7 @@ router.post('/contactInfo', function(req, res) {
             throw err;
         }
         connection.query("SELECT concat(FirstName, ' ', LastName) Name, UserEmail, PhoneNumber, MobileNumber, AddressOne, AddressTwo, AddressCountry, AddressCity, AddressState, AddressZip FROM Application INNER JOIN User_ ON Application.ASURITE_ID = User_.ASURITE_ID WHERE Application.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -114,12 +117,11 @@ router.post('/contactInfo', function(req, res) {
                     'AddressCountry' : rows[0].AddressCountry,
                     'AddressCity'    : rows[0].AddressCity,
                     'AddressState'   : rows[0].AddressState,
-                    'AddressZip'     : rows[0].AddressZip}; 
-                   
+                    'AddressZip'     : rows[0].AddressZip};
+
                 var response = JSON.stringify(ContactInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -133,6 +135,7 @@ router.post('/applicationTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT EducationLevel, DegreeProgram, isFourPlusOne, GPA, isInternationalStudent, SpeakTest, DATE_FORMAT(FirstSession, '%m/%d/%Y') AS FirstSession, GraduationDate, TimeCommitment, isTA, isGrader, CurrentEmployer, WorkHours, isWorkedASU FROM Application INNER JOIN User_ ON Application.ASURITE_ID = User_.ASURITE_ID WHERE Application.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -153,12 +156,11 @@ router.post('/applicationTable', function(req, res) {
                     'isGrader'                : rows[0].isGrader,
                     'CurrentEmployer'         : rows[0].CurrentEmployer,
                     'WorkHours'               : rows[0].WorkHours,
-                    'isWorkedASU'             : rows[0].isWorkedASU}; 
-                   
+                    'isWorkedASU'             : rows[0].isWorkedASU};
+
                 var response = JSON.stringify(AppInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -172,6 +174,7 @@ router.post('/languagesTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT isLanguage, LanguageLevel, OtherLanguage, OtherLevel FROM Languages INNER JOIN User_ ON Languages.ASURITE_ID = User_.ASURITE_ID WHERE Languages.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -184,13 +187,12 @@ router.post('/languagesTable', function(req, res) {
                     'isLanguage'    : rows[i].isLanguage,
                     'LanguageLevel' : rows[i].LanguageLevel,
                     'OtherLanguage' : rows[i].OtherLanguage,
-                    'OtherLevel'    : rows[i].OtherLevel}; 
+                    'OtherLevel'    : rows[i].OtherLevel};
                     LanguageInfo.push(Languages);
-                }   
+                }
                 var response = JSON.stringify(LanguageInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -204,6 +206,7 @@ router.post('/ideTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT isIDE, OtherIDE FROM IDEs INNER JOIN User_ ON IDEs.ASURITE_ID = User_.ASURITE_ID WHERE IDEs.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -214,13 +217,12 @@ router.post('/ideTable', function(req, res) {
                 for (var i = 0; i < rows.length; i++) {
                     var IDEs  = {
                     'isIDE'    : rows[i].isIDE,
-                    'OtherIDE' : rows[i].OtherIDE}; 
+                    'OtherIDE' : rows[i].OtherIDE};
                     IDEInfo.push(IDEs);
-                }   
+                }
                 var response = JSON.stringify(IDEInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -234,6 +236,7 @@ router.post('/toolsTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT isTool, OtherTool FROM Collaborative_Tools INNER JOIN User_ ON Collaborative_Tools.ASURITE_ID = User_.ASURITE_ID WHERE Collaborative_Tools.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -244,13 +247,12 @@ router.post('/toolsTable', function(req, res) {
                 for (var i = 0; i < rows.length; i++) {
                     var Tools  = {
                     'isTool'    : rows[i].isTool,
-                    'OtherTool' : rows[i].OtherTool}; 
+                    'OtherTool' : rows[i].OtherTool};
                     ToolInfo.push(Tools);
-                }   
+                }
                 var response = JSON.stringify(ToolInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -264,6 +266,7 @@ router.post('/coursesTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT isCourse, isPrefer, isQualified, isPreviouslyTA, isPreviouslyGrader, OtherCourse, isOtherPrefer, isOtherQualified, isOtherPreviouslyTA, isOtherPreviouslyGrader FROM Course_Competencies INNER JOIN User_ ON Course_Competencies.ASURITE_ID = User_.ASURITE_ID WHERE Course_Competencies.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -282,13 +285,12 @@ router.post('/coursesTable', function(req, res) {
                     'isOtherPrefer'           : rows[i].isOtherPrefer,
                     'isOtherQualified'        : rows[i].isOtherQualified,
                     'isOtherPreviouslyTA'     : rows[i].isOtherPreviouslyTA,
-                    'isOtherPreviouslyGrader' : rows[i].isOtherPreviouslyGrader}; 
+                    'isOtherPreviouslyGrader' : rows[i].isOtherPreviouslyGrader};
                     CourseInfo.push(Courses);
-                }   
+                }
                 var response = JSON.stringify(CourseInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -302,6 +304,7 @@ router.post('/calendarTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT CalendarDay, TIME_FORMAT(StartHour, '%h:%i %p') AS StartHour, TIME_FORMAT(StopHour, '%h:%i %p') AS StopHour FROM Calendar INNER JOIN User_ ON Calendar.ASURITE_ID = User_.ASURITE_ID WHERE Calendar.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -313,13 +316,12 @@ router.post('/calendarTable', function(req, res) {
                     var Calendar  = {
                     'CalendarDay' : rows[i].CalendarDay,
                     'StartHour'   : rows[i].StartHour,
-                    'StopHour'    : rows[i].StopHour}; 
+                    'StopHour'    : rows[i].StopHour};
                     CalendarInfo.push(Calendar);
-                }   
+                }
                 var response = JSON.stringify(CalendarInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -333,6 +335,7 @@ router.post('/attachmentTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT IposName, TranscriptName, ResumeName, DATE_FORMAT(IposUploadDate, '%m/%d/%Y') AS IposUploadDate, DATE_FORMAT(TranscriptUploadDate, '%m/%d/%Y') AS TranscriptUploadDate, DATE_FORMAT(ResumeUploadDate, '%m/%d/%Y') AS ResumeUploadDate, Attachment.ASURITE_ID FROM Attachment INNER JOIN User_ ON Attachment.ASURITE_ID = User_.ASURITE_ID WHERE Attachment.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -341,17 +344,16 @@ router.post('/attachmentTable', function(req, res) {
             } else if (rows[0]) {
                     var AttachmentInfo  = {
                     'ResumeName'           : rows[0].ResumeName,
-                    'ResumeUploadDate'     : rows[0].ResumeUploadDate,  
+                    'ResumeUploadDate'     : rows[0].ResumeUploadDate,
                     'TranscriptName'       : rows[0].TranscriptName,
                     'TranscriptUploadDate' : rows[0].TranscriptUploadDate,
                     'IposName'             : rows[0].IposName,
                     'IposUploadDate'       : rows[0].IposUploadDate,
-                    'ASURITE_ID'           : rows[0].ASURITE_ID}; 
-                   
+                    'ASURITE_ID'           : rows[0].ASURITE_ID};
+
                 var response = JSON.stringify(AttachmentInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -392,6 +394,7 @@ router.post('/evaluationTable', function(req, res) {
             throw err;
         }
         connection.query("SELECT DATE_FORMAT(DateCreated, '%m/%d/%Y') AS DateCreated, InstructorName, QOneScore, QOneComments, QTwoScore, QTwoComments, QThreeScore, QThreeComments, QFourScore, QFourComments FROM Student_Evaluation WHERE Student_Evaluation.ASURITE_ID = ?", [req.body.studentId], function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -410,13 +413,12 @@ router.post('/evaluationTable', function(req, res) {
                     'QThreeScore'    : rows[i].QThreeScore,
                     'QThreeComments' : rows[i].QThreeComments,
                     'QFourScore'     : rows[i].QFourScore,
-                    'QFourComments'  : rows[i].QFourComments}; 
+                    'QFourComments'  : rows[i].QFourComments};
                     EvalInfo.push(Evals);
-                }   
+                }
                 var response = JSON.stringify(EvalInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -430,6 +432,7 @@ router.get('/courses', function(req, res) {
             throw err;
         }
         connection.query("SELECT CourseSection FROM Courses", function(err2, rows) {
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
@@ -439,9 +442,9 @@ router.get('/courses', function(req, res) {
                 var CourseInfo = [];
                 for (var i = 0; i < rows.length; i++) {
                     var Courses  = {
-                    'CourseSection' : rows[i].CourseSection}; 
+                    'CourseSection' : rows[i].CourseSection};
                     CourseInfo.push(Courses);
-                }   
+                }
                 var sortByProperty = function (property) {
                     return function (x, y) {
                         return ((x[property].substring(4,7) === y[property].substring(4,7)) ? 0 : ((x[property].substring(4,7) > y[property].substring(4,7)) ? 1 : -1));
@@ -450,8 +453,7 @@ router.get('/courses', function(req, res) {
                 CourseInfo.sort(sortByProperty('CourseSection'));
                 var response = JSON.stringify(CourseInfo);
                 res.send(response);
-            } 
-            connection.release();
+            }
         });
     });
 });
@@ -466,19 +468,19 @@ router.post('/adminSetUserPassword', function(req, res) {
             throw err;
         }
         connection.query('SELECT UserPassword FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows){
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
             } else if (rows[0]) {
                 if (req.body.CurrentPassword) {
-                    checkHash(req.body.CurrentPassword, rows[0].UserPassword, res, req, rows, changePassword);   
+                    checkHash(req.body.CurrentPassword, rows[0].UserPassword, res, req, rows, changePassword);
                 } else {
                     changePassword(res, req, true);
-                } 
+                }
             } else {
                 res.send({'error' : 1}); // Responds error 1 if user not found
             }
-            connection.release();
         });
     });
 });
@@ -502,13 +504,13 @@ function changePassword(response, req, validation) {
                         throw err;
                     }
                     connection.query('UPDATE User_ SET UserPassword = ? WHERE ASURITE_ID = ?', [req.body.NewPassword, req.body.ASURITE_ID], function(err2, rows) {
+                      connection.release();
                         if(err2) {
                             console.log('Error performing query: ' + err2);
                             throw err2;
                         } else {
-                            response.sendStatus(200); 
+                            response.sendStatus(200);
                         }
-                        connection.release();
                     });
                 });
             }

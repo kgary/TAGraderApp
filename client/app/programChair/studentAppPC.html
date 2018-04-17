@@ -9,14 +9,15 @@
                 <li><a ng-href='#!/pcChangePassword'>Change Password</a></li>
                 <li><a ng-href='#!/createFacultyAdminAccount'>Add Faculty/Admin User</a></li>
                 <li><a ng-href='#!/editSchedule'>Edit Schedule</a></li>
+								<li><a ng-href='#!/classSummary'>View Class</a></li>
                 <li><a ng-href='#!/evaluationsPC'>Submit Student Evaluation</a></li>
                 <li><a ng-href='#!/viewApplicationsPC'>View Student Applications</a></li>
                 <li><a ng-href='#!/courseEdit'>Edit Courses</a></li>
                 <li><a href="#!/pcUpdateAllEnrollments">Update Enrollment</a></li>
                 <li><a href='' ng-show='displayLogout()' ng-click='logout()'>Logout</a></li>
             </ul>
-        </nav>  
-    </header>  
+        </nav>
+    </header>
     <div class="studentApp">
         <label><h1>{{contactInfo.Name}}</h1></label>
         <fieldset>
@@ -25,12 +26,14 @@
                 <table>
                     <tr>
                         <th>Email</th>
+												<th>ASU ID </th>
                         <th>Phone Number</th>
                         <th>Mobile Number</th>
                         <th>Address</th>
                     </tr>
                     <tr>
                         <td>{{contactInfo.UserEmail}}</td>
+												<td>{{studentId}}</td>
                         <td>{{contactInfo.PhoneNumber}}</td>
                         <td>{{contactInfo.MobileNumber}}</td>
                         <td>{{contactInfo.AddressOne}}, {{contactInfo.AddressTwo}}<br>
@@ -66,8 +69,8 @@
                         <tr>
                             <td>{{appInfo.EducationLevel}}</td>
                             <td>{{appInfo.DegreeProgram}}</td>
-                            <td>{{appInfo.isFourPlusOne !=0 ? 'Yes':'No'}}</td>
-                            <td>{{appInfo.GPA}}</td>
+                            <td><select ng-model = "fourPlusOne.value" ng-change ="overrideFourPlusone(false)" ng-options = "x for x in fourPlusOne.values"></select></td>
+                            <td><select ng-model = "gpa.value" ng-change ="overrideFourPlusone(true)" ng-options = "x for x in gpa.values"></select></td>
                             <td>{{appInfo.isInternationalStudent !=0 ? 'Yes':'No'}}</td>
                             <td>{{appInfo.SpeakTest !=null ? appInfo.SpeakTest:'NA'}}</td>
                             <td>{{appInfo.FirstSession}}</td>
@@ -91,12 +94,12 @@
                     <table>
                         <tr>
                             <th ng-repeat='language in languages'>
-                                {{language.isLanguage}} 
+                                {{language.isLanguage}}
                                 {{language.OtherLanguage}}</th>
                         </tr>
                         <tr>
                             <td ng-repeat='language in languages'>
-                                {{language.LanguageLevel}} 
+                                {{language.LanguageLevel}}
                                 {{language.OtherLevel}}</td>
                         </tr>
                     </table>
@@ -109,7 +112,7 @@
             <div ng-show='ides.length'>
                 <table>
                     <tr>
-                        <td ng-repeat='ide in ides'>{{ide.isIDE}} {{ide.OtherIDE}}</td> 
+                        <td ng-repeat='ide in ides'>{{ide.isIDE}} {{ide.OtherIDE}}</td>
                     </tr>
                 </table>
             </div>
@@ -132,22 +135,22 @@
                 <table>
                     <tr>
                         <th>Courses</th>
-                        <th>Qualified</th>
-                        <th>Prefer</th>
+                        <!-- <th>Qualified</th>
+                        <th>Prefer</th> -->
                         <th>Previously TA</th>
                         <th>Previously Grader</th>
                     </tr>
                     <tr ng-repeat='course in courses'>
                         <td>{{course.isCourse}}
                             {{course.OtherCourse}}</td>
-                        <td>{{course.isQualified !=1 ? '':'Yes'}}
+                        <!-- <td>{{course.isQualified !=1 ? '':'Yes'}}
                             {{course.isOtherQualified !=1 ? '':'Yes'}}</td>
                         <td>{{course.isPrefer !=1 ? '':'Yes'}}
-                            {{course.isOtherPrefer !=1 ? '':'Yes'}}</td>
+                            {{course.isOtherPrefer !=1 ? '':'Yes'}}</td> -->
                         <td>{{course.isPreviouslyTA !=1 ? '':'Yes'}}
                             {{course.isOtherPreviouslyTA !=1 ? '':'Yes'}}</td>
                         <td>{{course.isPreviouslyGrader !=1 ? '':'Yes'}}
-                            {{course.isOtherPreviouslyGrader !=1 ? '':'Yes'}}</td> 
+                            {{course.isOtherPreviouslyGrader !=1 ? '':'Yes'}}</td>
                     </tr>
                 </table>
             </div>
@@ -159,7 +162,7 @@
                 <div ng-show='calendars.length'>
                     <table>
                         <tr>
-                            <th ng-repeat='calendar in calendars'>{{calendar.CalendarDay}}</th> 
+                            <th ng-repeat='calendar in calendars'>{{calendar.CalendarDay}}</th>
                        	</tr>
                         <tr>
                             <td ng-repeat='calendar in calendars'>{{calendar.StartHour}} - {{calendar.StopHour}}</td>
@@ -207,6 +210,15 @@
             </fieldset>
         </div>
         <br>
+				<div>
+            <fieldset>
+                <h4>Rating for {{contactInfo.Name}} :</h4>
+                <i>1 being Poor and 5 being Good</i>
+								<select ng-model="rating" ng-change ="submitRating()" ng-options = "x for x in [1,2,3,4,5]" >
+								</select>
+            </fieldset>
+        </div>
+				<br>
         <div>
             <fieldset>
                 <h4>Application Feedback for {{contactInfo.Name}}:</h4>
@@ -216,6 +228,7 @@
                     <input type='checkbox' ng-model='hasComplied' ng-true-value='1' ng-false-value='0'> Student has indicated compliance with feedback<br>
                     <input type='submit' value='Clear and Save No Feedback' ng-click='saveFeedback(false)'/>
                     <input type='submit' value='Save and Submit Feedback' ng-click='saveFeedback(true)'/>
+										<!-- <input type='submit' value='Flag' ng-click='flagApplication()'/> -->
                 </form>
                 <div>{{feedbackSaveMessage}}</div>
             </fieldset>

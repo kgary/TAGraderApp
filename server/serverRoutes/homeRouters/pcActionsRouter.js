@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 
 // Invoked for any request passed to this router
 router.use(function(req, res, next) {
@@ -13,13 +13,15 @@ router.use(function(req, res, next) {
 });
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 router.post('/', function(req, res) {
     mysql_pool.getConnection(function(err, connection) {
@@ -32,7 +34,7 @@ router.post('/', function(req, res) {
             var hasActions = 0;
             var incompleteClasses = [];
             for (var i = 0; i < rows.length; i++) {
-                incompleteClasses.push(rows[i]);    
+                incompleteClasses.push(rows[i]);
             }
             if (rows.length > 0) {
                 hasActions = 1;
@@ -44,21 +46,21 @@ router.post('/', function(req, res) {
                     if (placements.missingTA.length > 0 || placements.missingGrader.length > 0 || placements.needTAConfirmation.length > 0 || placements.needGraderConfirmation.length > 0 || placements.needTAHours.length > 0 || placements.needGraderHours.length > 0) {
                         hasActions = 1;
                     }
-                    connection.query("SELECT DateCreated FROM Application WHERE DateCreated > ? AND AppStatus != 'new'", [new Date(req.body.lastLogin)], function(err3, apps) { 
+                    connection.query("SELECT DateCreated FROM Application WHERE DateCreated > ? AND AppStatus != 'new'", [new Date(req.body.lastLogin)], function(err3, apps) {
                         connection.query("SELECT AppStatus FROM Application WHERE AppStatus = 'incomplete'", function(err4, incompleteCount) {
                             connection.query("SELECT AppStatus FROM Application WHERE AppStatus = 'complete'", function(err5, completeCount) {
                                 connection.query("SELECT DeadlineDate FROM Deadline", function(err6, deadlineDate) {
                                    connection.query("SELECT Application.ASURITE_ID, CONCAT(User_.FirstName, ' ', User_.LastName) AS StudentName FROM Application LEFT JOIN Feedback ON Application.AppID = Feedback.AppID LEFT JOIN User_ ON User_.ASURITE_ID = Application.ASURITE_ID WHERE Feedback.hasComplied = 1", function(err7, compliedStudents) {
-                                       res.send({hasActions:hasActions, incompleteClasses:incompleteClasses, placements:placements, newApps:apps.length, incompleteApps:incompleteCount.length, completeApps:completeCount.length, deadline:deadlineDate[0].DeadlineDate, compliedStudents:compliedStudents}); 
-                                   }); 
+                                     connection.release();
+                                       res.send({hasActions:hasActions, incompleteClasses:incompleteClasses, placements:placements, newApps:apps.length, incompleteApps:incompleteCount.length, completeApps:completeCount.length, deadline:deadlineDate[0].DeadlineDate, compliedStudents:compliedStudents});
+                                   });
                                 });
                             });
                         });
                     });
                 });
             });
-        });        
-        connection.release();
+        });
     });
     function courseTAandGraderChecks(data, scheduleIDs) {
         var placementIDs = [];
@@ -74,7 +76,7 @@ router.post('/', function(req, res) {
         var firstGraderHours;
         var secondGraderHours;
         var hasPlacement;
-        
+
         // searches for course schedules with no placements
         for (var i = 0; i < data.length; i++) {
             placementIDs.push(data[i].PlacementScheduleID);
@@ -104,7 +106,7 @@ router.post('/', function(req, res) {
             if (data[i].TARequiredHours !== null) {
                 if (data[i].TAHours !== null) {
                     firstTAHours = data[i].TAHours;
-                } 
+                }
                 if (data[i].TATwoHours !== null) {
                     secondTAHours = data[i].TATwoHours;
                 }
@@ -117,7 +119,7 @@ router.post('/', function(req, res) {
             if (data[i].GraderRequiredHours !== null) {
                 if (data[i].GraderOneHours !== null) {
                     firstGraderHours = data[i].GraderOneHours;
-                } 
+                }
                 if (data[i].GraderTwoHours !== null) {
                     secondGraderHours = data[i].GraderTwoHours;
                 }
@@ -126,16 +128,16 @@ router.post('/', function(req, res) {
                     coursesNeedGraderHours.push({Location:data[i].Location, Subject:data[i].Subject, CatalogNumber:data[i].CatalogNumber, CourseNumber:data[i].CourseNumber});
                 }
             }
-            // checks if each course has a TA not confirmed            
+            // checks if each course has a TA not confirmed
             if ((data[i].TA !== null && data[i].TAStatus !== 'Confirmed') || (data[i].TATwo !== null && data[i].TATwoStatus !== 'Confirmed')) {
                 coursesNeedTAConfirmation.push({Location:data[i].Location, Subject:data[i].Subject, CatalogNumber:data[i].CatalogNumber, CourseNumber:data[i].CourseNumber});
             }
-            // checks if each course has a Grader not confirmed            
+            // checks if each course has a Grader not confirmed
             if ((data[i].GraderOne !== null && data[i].GraderOneStatus !== 'Confirmed') || (data[i].GraderTwo !== null && data[i].GraderTwoStatus !== 'Confirmed')) {
                 coursesNeedGraderConfirmation.push({Location:data[i].Location, Subject:data[i].Subject, CatalogNumber:data[i].CatalogNumber, CourseNumber:data[i].CourseNumber});
             }
         }
         return {missingPlacements:coursesMissingPlacements, missingTA:coursesMissingTA, missingGrader:coursesMissingGrader, needTAHours:coursesNeedTAHours, needGraderHours:coursesNeedGraderHours, needTAConfirmation:coursesNeedTAConfirmation, needGraderConfirmation:coursesNeedGraderConfirmation};
     }
-});   
+});
 module.exports = router;

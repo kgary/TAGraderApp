@@ -26,10 +26,11 @@ services.service('WorkHoursCheckService', function(WORK_HOURS) {
             } else {
                 maxHours = WORK_HOURS.us;
             }
-            wantedHours += extraHours;
+            
+            //wantedHours += extraHours;
             if (wantedHours > maxHours) {
                 return {isOver:true, hours:wantedHours};
-            } 
+            }
         }
         return {isOver:false, hours:null};
     }
@@ -41,28 +42,28 @@ services.service('WorkHoursCheckService', function(WORK_HOURS) {
 services.service('UserInfoService', function($window) {
     this.setUserId = function(loginId) {
         $window.sessionStorage.setItem('userId', loginId);
-    } 
+    }
     this.setFullName = function(name) {
         $window.sessionStorage.setItem('userName', name);
-    }   
+    }
     this.setUserType = function(type) {
         $window.sessionStorage.setItem('userType', type);
-    }   
+    }
     this.setAppStatus = function(status) {
         $window.sessionStorage.setItem('appStatus', status);
-    } 
+    }
     this.setToken = function(token) {
         $window.sessionStorage.setItem('token', token);
-    } 
+    }
     this.setLastLogin = function(lastLogin) {
         $window.sessionStorage.setItem('lastLogin', lastLogin);
     }
     this.getUserId = function() {
         return $window.sessionStorage.getItem('userId');
-    }   
+    }
     this.getFullName = function() {
         return $window.sessionStorage.getItem('userName');
-    }   
+    }
     this.getUserType = function() {
         return $window.sessionStorage.getItem('userType');
     }
@@ -76,10 +77,10 @@ services.service('UserInfoService', function($window) {
         return $window.sessionStorage.getItem('lastLogin');
     }
     this.clearUserSession = function() {
-        $window.sessionStorage.removeItem('userId');   
-        $window.sessionStorage.removeItem('userName');   
-        $window.sessionStorage.removeItem('userType');          
-        $window.sessionStorage.removeItem('appStatus');   
+        $window.sessionStorage.removeItem('userId');
+        $window.sessionStorage.removeItem('userName');
+        $window.sessionStorage.removeItem('userType');
+        $window.sessionStorage.removeItem('appStatus');
         $window.sessionStorage.removeItem('token');
         $window.sessionStorage.removeItem('lastLogin');
         $window.sessionStorage.removeItem('className');
@@ -116,7 +117,7 @@ services.service('UserAuthService', function(UserInfoService, USER_ROLES) {
 });
 
 /*
- * request: adds the stored token to the http call Authorization header     
+ * request: adds the stored token to the http call Authorization header
  * responseError: andles unauthorized response from server
  */
 services.service('AuthInterceptor', function($injector, $location, UserInfoService) {
@@ -135,7 +136,7 @@ services.service('AuthInterceptor', function($injector, $location, UserInfoServi
                $location.path('/badrequest');
            }
        }
-   } 
+   }
 });
 
 /*
@@ -143,7 +144,7 @@ services.service('AuthInterceptor', function($injector, $location, UserInfoServi
  */
 services.service('FirstTimeLoginService', function() {
     this.firstTime = false;
-    
+
     this.setFirstTime = function(val) {
         this.firstTime = val;
     }
@@ -196,7 +197,7 @@ services.service('SendStudentService', function($window) {
         return $window.sessionStorage.getItem('setStudentId');
     }
     this.setStudentsToAssign = function(studentIds) {
-        $window.sessionStorage.setItem('studentsToAssign', JSON.stringify(studentIds));     
+        $window.sessionStorage.setItem('studentsToAssign', JSON.stringify(studentIds));
     }
     this.getStudentsToAssign = function() {
         return JSON.parse($window.sessionStorage.getItem('studentsToAssign'));
@@ -221,7 +222,7 @@ services.service('PageCompletionService', function() {
             if (scope.ta === 0 && scope.grader === 0 || scope.ta === null && scope.grader === null || scope.ta === null && scope.grader === 0 ||  scope.ta === 0 && scope.grader === null) {
                 return 0;
             }
-            if (scope.hours === 'null hours per week') {              
+            if (scope.hours === 'null hours per week') {
                return 0;
             }
             if (scope.international === 1) {
@@ -235,7 +236,7 @@ services.service('PageCompletionService', function() {
             }
         }
         for (var i = 0; i < requiredFields.length; i++) {
-            if (!scope[requiredFields[i]]) {  
+            if (!scope[requiredFields[i]]) {
                return 0;
             }
        }
@@ -272,7 +273,7 @@ services.service('AppStatusService', function($window, UserInfoService) {
         $window.sessionStorage.setItem(pageName, pageStatus);
         if (pageStatus === 0) {
             return 'incomplete'
-        } 
+        }
         for (var i = 0; i < this.pages.length; i++) {
             if ($window.sessionStorage.getItem(this.pages[i]) === '0') {
                 return 'incomplete';
@@ -282,7 +283,7 @@ services.service('AppStatusService', function($window, UserInfoService) {
     }
 });
 
-// performs a check of the set deadline date against the current date 
+// performs a check of the set deadline date against the current date
 services.service('DeadlineDateCheckService', function() {
    this.deadlineNotice = 3;
    this.studentDateNotice = function(deadline) {
@@ -293,7 +294,7 @@ services.service('DeadlineDateCheckService', function() {
        window = window.toISOString();
        if (deadline === today) {
            this.deadlineNotice = 0;     // today is the same as the deadline
-       } else if (window >= deadline) {         
+       } else if (window >= deadline) {
            this.deadlineNotice = 1;     // today is within a week of deadline
        }
        if (today > deadline) {

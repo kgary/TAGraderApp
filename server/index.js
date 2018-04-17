@@ -21,6 +21,8 @@ var app = express();
 // Directs to client folder to serve static files
 app.use('/', express.static(path.join(__dirname, '..', directoryToServe)));
 
+app.use(express.static(path.join(__dirname, '..', directoryToServe)));
+
 // Directs to angular modules to have modules stored locally
 app.use('/angular', express.static(path.join(__dirname, '..', 'node_modules/angular')));
 app.use('/angular-route', express.static(path.join(__dirname, '..', 'node_modules/angular-route')));
@@ -30,7 +32,22 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // Use JWT for token authorization
-app.use(expressJWT({secret:'sblapp123'}).unless({path:['/', '/login', '/createAccount', '/favicon.ico']})); // token secret - not needed for 'unless' routes
+app.use(expressJWT({secret:'sblapp123',
+                    getToken: function fromHeaderOrQuerystring (req) {
+
+     if (req.query && req.query.access_token) {
+      //console.log(req.query.access_token);
+      return req.query.access_token;
+    }
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+        //console.log("access-token");
+        return req.headers.authorization.split(' ')[1];
+    }
+    return null;
+  }}).unless({path:['/', '/login', '/createAccount', '/favicon.ico','/login/recoverPassword','/login/retrievePassword']})); // token secret - not needed for 'unless' routes
+
+//app.get('/passwordreset', express.static(path.join(__dirname, '../client/app/login', 'passwordreset.html')));
+app.use('/passwordreset', express.static(path.join(__dirname, '..', directoryToServe)));
 
 // Set up favicon
 app.use(favicon(path.join(__dirname, '../client/assets/images', 'asufavicon.ico')));
@@ -43,7 +60,7 @@ var logInRouter = require('./serverRoutes/logInRouter/logInRouter.js'),
     educationRouter = require('./serverRoutes/applicationRouters/educationRouter.js'),
     educationIposUploadRouter = require('./serverRoutes/applicationRouters/educationIposUploadRouter.js'),
     educationTranscriptUploadRouter = require('./serverRoutes/applicationRouters/educationTranscriptUploadRouter.js'),
-    employmentRouter = require('./serverRoutes/applicationRouters/employmentRouter.js'), 
+    employmentRouter = require('./serverRoutes/applicationRouters/employmentRouter.js'),
     employmentResumeUploadRouter = require('./serverRoutes/applicationRouters/employmentResumeUploadRouter.js'),
     availabilityRouter = require('./serverRoutes/applicationRouters/availabilityRouter.js'),
     languagesRouter = require('./serverRoutes/applicationRouters/languagesRouter.js'),
@@ -74,6 +91,9 @@ app.listen(8030, function () {
 //  Send requests to correct router
 app.use('/login', logInRouter);
 app.use('/createAccount', createAccountRouter);
+app.use('/login/recoverPassword', logInRouter);
+app.use('/login/password-reset', logInRouter);
+app.use('/createAccount/retrievePassword', logInRouter);
 app.use('/contactInfo', contactInfoRouter);
 app.use('/education', educationRouter);
 app.use('/iposUpload', educationIposUploadRouter);
@@ -93,6 +113,7 @@ app.use('/programChair/updateRequiredHours', programChairRouter);
 app.use('/programChair/updateAssignedStudents', programChairRouter);
 app.use('/programChair/editSchedule', programChairRouter);
 app.use('/programChair/saveNewStudents', programChairRouter);
+app.use('/programChair/flagApplication', programChairRouter);
 app.use('/faculty', facultyRouter);
 app.use('/programChair/getDeadline', programChairRouter);
 app.use('/programChair/setDeadline', programChairRouter);

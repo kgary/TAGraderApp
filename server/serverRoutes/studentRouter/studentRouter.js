@@ -5,7 +5,7 @@
 
 var express  = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 
 // Invoked for any request passed to this router
@@ -14,13 +14,15 @@ router.use(function(req, res, next) {
 });
 
 //  Create mysql connection pool
-var mysql_pool  = mysql.createPool({
-    connectionLimit : 5,
-    host            : 'localhost',
-    user            : 'root',
-    password        : 'root',
-    database        : 'sblDB'
-});
+// var mysql_pool  = mysql.createPool({
+//     connectionLimit : 5,
+//     host            : 'localhost',
+//     user            : 'root',
+//     password        : 'root',
+//     database        : 'sblDB'
+// });
+
+var mysql_pool = require('../DBConfig.js');
 
 // Gets current password from database
 router.post('/', function(req, res) {
@@ -32,15 +34,15 @@ router.post('/', function(req, res) {
             throw err;
         }
         connection.query('SELECT UserPassword FROM User_ WHERE ASURITE_ID = ?', [req.body.ASURITE_ID], function(err2, rows){
+          connection.release();
             if(err2) {
                 console.log('Error performing query: ' + err2);
                 throw err2;
             } else if (rows[0].UserPassword) {
-                checkHash(req.body.CurrentPassword, rows[0].UserPassword, res, req, rows, changePassword);    
+                checkHash(req.body.CurrentPassword, rows[0].UserPassword, res, req, rows, changePassword);
             } else {
                 res.send({'error' : 1}); // Responds error 1 if user not found
             }
-            connection.release();
         });
     });
 });
@@ -64,13 +66,13 @@ function changePassword(response, req, validation) {
                         throw err;
                     }
                     connection.query('UPDATE User_ SET UserPassword = ? WHERE ASURITE_ID = ?', [req.body.NewPassword, req.body.ASURITE_ID], function(err2, rows) {
+                      connection.release();
                         if(err2) {
                             console.log('Error performing query: ' + err2);
                             throw err2;
                         } else {
-                            response.sendStatus(200); 
+                            response.sendStatus(200);
                         }
-                        connection.release();
                     });
                 });
             }
